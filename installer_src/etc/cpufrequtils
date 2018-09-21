@@ -8,7 +8,7 @@ echo 1 > /sys/devices/system/cpu/cpufreq/boost
 
 # Set GPU to always be at max clockspeed
 
-GPU_MAX_SPEED=$(cat /sys/class/misc/mali0/device/devfreq/devfreq0/available_frequencies | awk '{printf $NF}')
+GPU_MAX_SPEED=$(cat /sys/class/misc/mali0/device/devfreq/devfreq0/available_frequencies | tr " " "\n" | sort -n | tail -n1)
 
 echo "userspace" > /sys/class/misc/mali0/device/devfreq/devfreq0/governor
 echo $GPU_MAX_SPEED > /sys/class/misc/mali0/device/devfreq/devfreq0/min_freq

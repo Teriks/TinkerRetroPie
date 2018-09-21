@@ -8,6 +8,9 @@ LOG_FILE="$SCRIPTPATH/install_$TIMESTAMP.log"
 PACKAGES_DIR="$SCRIPTPATH/packages"
 ETC_DIR="$SCRIPTPATH/etc"
 
+RETROPIE_SETUP_DIR=$(realpath "$SCRIPTPATH/../RetroPie-Setup")
+
+
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root." 
    exit 1
@@ -155,16 +158,42 @@ service cpufrequtils restart
 
 if [ $? -ne 0 ]; then exit 1; fi
 
+echo "========================================="
+echo "Configuring retropie group and sudoers..."
+echo "========================================="
+
+
+if ! getent group retropie; then
+    echo "Creating group: retropie"
+    groupadd retropie
+fi
+
+if ! id -nG $SUDO_USER | grep -qw retropie; then
+    echo "Adding user $SUDO_USER to group retropie."
+    usermod -a -G retropie $SUDO_USER
+fi
+
+echo "Adding passwordless sudo for important retropie commands..."
+
+set -x
+
+echo "%retropie ALL=(ALL:ALL) NOPASSWD: $RETROPIE_SETUP_DIR/retropie_setup.sh" > /etc/sudoers.d/retropie
+echo "%retropie ALL=(ALL:ALL) NOPASSWD: $RETROPIE_SETUP_DIR/retropie_packages.sh" >> /etc/sudoers.d/retropie
+echo "%retropie ALL=(ALL:ALL) NOPASSWD: /bin/systemctl restart keyboard-setup" >> /etc/sudoers.d/retropie
+echo "%retropie ALL=(ALL:ALL) NOPASSWD: /opt/retropie/emulators/retroarch/bin/retroarch" >> /etc/sudoers.d/retropie
+
+set +x
+
 echo "============================="
 echo "Cloning RetroPie-Setup to ../"
 echo "============================="
 
-if [ -d "$SCRIPTPATH/../RetroPie-Setup" ]; then
-    pushd "$SCRIPTPATH/../RetroPie-Setup"
+if [ -d "$RETROPIE_SETUP_DIR" ]; then
+    pushd "$RETROPIE_SETUP_DIR"
     if ! git pull; then exit 1; fi
     popd
 else
-    git clone https://github.com/RetroPie/RetroPie-Setup "$SCRIPTPATH/../RetroPie-Setup"
+    git clone https://github.com/RetroPie/RetroPie-Setup "$RETROPIE_SETUP_DIR"
     if [ $? -ne 0 ]; then exit 1; fi
 fi
 
@@ -181,7 +210,7 @@ echo "=========================="
 echo "Starting RetroPie-Setup..."
 echo "=========================="
 
-pushd "$SCRIPTPATH/../RetroPie-Setup"
+pushd "$RETROPIE_SETUP_DIR"
 ./retropie_setup.sh
 popd
 

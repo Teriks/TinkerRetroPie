@@ -55,11 +55,13 @@ compile_armbian ()
     fi
 
     pushd "$SCRIPTPATH/armbian_build"
+ 
+    mkdir -p userpatches
 
     # Enable MALI devfreq support
     sed 's/# CONFIG_MALI_DEVFREQ is not set/CONFIG_MALI_DEVFREQ=y/' \
-        config/kernel/linux-rockchip-next.config > \
-        userpatches/linux-rockchip-next.config
+        ./config/kernel/linux-rockchip-next.config > \
+        ./userpatches/linux-rockchip-next.config
 
     ./compile.sh docker KERNEL_CONFIGURE=$ARMBIAN_CONFIGURE_KERNEL KERNEL_ONLY=no \
                         BUILD_DESKTOP=no BOARD=tinkerboard \
