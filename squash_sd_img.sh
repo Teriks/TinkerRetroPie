@@ -85,7 +85,7 @@ echo "======================="
 echo "Shrinking filesystem..."
 echo "======================="
 
-umount $DEV_PART 2>&1 /dev/null
+umount $DEV_PART > /dev/null 2>&1
 resize2fs -Mfp $DEV_PART
 
 echo "=================================="
@@ -129,6 +129,7 @@ echo "Cloning device to image..."
 echo "=========================="
 
 pv $DEV -pte --size $NEW_PART_END_BYTE | dd of=$DISK_IMAGE bs=512 count=$(($NEW_PART_END_SECTOR+1))
+chown $SUDO_USER:$SUDO_USER $DISK_IMAGE
 
 echo "============================================="
 echo "Restoring device partition/filesystem size..."
