@@ -13,10 +13,39 @@ ETC_DIR="$SCRIPTPATH/etc"
 
 RETROPIE_SETUP_DIR=$(realpath "$SCRIPTPATH/../RetroPie-Setup")
 
+
+if [[ $@ == -h || $@ == --help ]]; then
+    echo "TinkerRetroPie installer."
+    echo ""
+    echo " Parameters: "
+    echo ""
+    echo " RETROPIE_BRANCH=(RetroPie-Setup git branch)"
+    echo ""
+    echo " e.g:"
+    echo ""
+    echo " ./installer.sh RETROPIE_BRANCH=master"
+    echo ""
+    echo " ./installer.sh RETROPIE_BRANCH=4.4"
+    echo ""
+    echo " ./installer.sh RETROPIE_BRANCH=ee8af99"
+    exit 0
+fi
+
+for i in "$@"; do
+    if [[ $i == *=* ]]; then
+        parameter=${i%%=*}
+        value=${i##*=}
+        echo "Command line: setting $parameter to" "${value:-(empty)}"
+        eval $parameter=$value
+    fi
+done
+
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root."
     exit 1
 fi
+
+RETROPIE_BRANCH=${RETROPIE_BRANCH:-"master"}
 
 pushd() {
     command pushd "$@" >/dev/null
@@ -184,6 +213,7 @@ popd() {
     echo "%retropie ALL=(ALL:ALL) NOPASSWD: $RETROPIE_SETUP_DIR/retropie_setup.sh" >/etc/sudoers.d/retropie
     echo "%retropie ALL=(ALL:ALL) NOPASSWD: $RETROPIE_SETUP_DIR/retropie_packages.sh" >>/etc/sudoers.d/retropie
     echo "%retropie ALL=(ALL:ALL) NOPASSWD: /bin/systemctl restart keyboard-setup" >>/etc/sudoers.d/retropie
+    echo "%retropie ALL=(ALL:ALL) NOPASSWD: /usr/sbin/service keyboard-setup restart" >>/etc/sudoers.d/retropie
     echo "%retropie ALL=(ALL:ALL) NOPASSWD: /opt/retropie/emulators/retroarch/bin/retroarch" >>/etc/sudoers.d/retropie
 
     set +x
@@ -195,10 +225,15 @@ popd() {
     if [ -d "$RETROPIE_SETUP_DIR" ]; then
         pushd "$RETROPIE_SETUP_DIR"
         if ! git pull; then exit 1; fi
+        if ! git checkout "$RETROPIE_BRANCH"; then exit 1; fi
         popd
     else
         git clone https://github.com/RetroPie/RetroPie-Setup "$RETROPIE_SETUP_DIR"
         if [ $? -ne 0 ]; then exit 1; fi
+
+        pushd "$RETROPIE_SETUP_DIR"
+            if ! git checkout "$RETROPIE_BRANCH"; then exit 1; fi
+        popd
     fi
 
 ) 2>&1 | tee "$LOG_FILE"
