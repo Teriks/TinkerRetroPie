@@ -1,31 +1,71 @@
 # TinkerRetroPie
 
-TinkerRetroPie is an Armbian OS Build wrapper and install script generator for installing RetroPie on TinkerBoards.
+TinkerRetroPie is an Armbian OS build wrapper and install script generator for installing RetroPie on TinkerBoards.
 
-This repository also features Pre-Built images with RetroPie installed, see the releases page.
+This repository also features pre-built images with RetroPie installed, see the releases page.
 
-TinkerRetroPie takes advantage of Mali Midgard (GPU) devfreq support in new linux kernels,
-in order to set the GPU to its max clock on system boot. (Normally locked to a low value)
+TinkerRetroPie takes advantage of the Mali Midgard (GPU) devfreq support in newer linux kernels
+to set the GPU to its max clock (600 MHz) on system boot. (Normally left at 100 MHz)
 
 The ``build_installer.sh`` script can configure and build Armbian from source for you with 
-Mali Midgard (GPU) devfreq support (Userland device frequency manipulation).
+Mali Midgard (GPU) devfreq support (Userland device frequency manipulation). This kernel option
+is not enabled by default.
 
 It will produce a tarball containing an installer script and its supporting files that you can
 run on your newly built image to install RetroPie.
 
-You can also use a build that you have previously built by specifying its location when prompted,
-but you must enable Mali Midgard devfreq support in the kernel config menu.
+You can also use an Armbian build that you have previously built by specifying its location when prompted.
+But the build must have had Mali Midgard devfreq support enabled from kernel config menu.
 
-TinkerRetroPie requires the "next" branch of the kernel (4.14.*), and is based on Debian Stretch.
+TinkerRetroPie requires the "next" branch of the kernel (4.14.*), and is only tested on images based on Debian Stretch.
 
-TinkerRetroPie uses the minimal server distribution as it's base, adding a desktop environment is untested/unsupported due
-to the finickiness of the userland Mali GPU drivers and X11.
+Install is only supported on the minimal server distribution. 
+Adding a desktop environment is untested/unsupported due to the finickiness of the userland Mali GPU drivers and X11.
 
 I have built these optional RetroPie packages in my prebuilt images:
 
  * reicast (dreamcast)
  * xboxdrv (works best for xbox controllers in my setup)
 
+# Performance
+
+The ``install.sh`` script from the generated installer tarball will install an init.d
+script that sets the GPU clock to its max frequency (600 MHz) and the GPU governor to "userspace".
+
+The script that does this is ``etc/init.d/gpu-freqboost-tinker``, which is installed to ``/etc/init.d/gpu-freqboost-tinker``
+and enabled by the install script.
+
+Make sure you have heaksinks installed and are using some kind of fan to keep the device cool.
+
+In the case that you do not have adequate cooling, you can disable the frequency boost with: 
+``sudo systemctl disable gpu-freqboost-tinker`` (performance will suffer a lot)
+
+Make sure to restart after running the above command.
+
+
+## Tested games
+
+With this boot configuration, reicast (dreamcast emulator) and mupen64plus run surprisingly well.
+
+Games I have tested on reicast running pretty much full or playable speed: 
+
+ * Dead Or Alive 2
+ * Crazy Taxi 
+ * Sonic Adventures 2
+ * Rayman 2: The Great Escape
+
+Games I have tested on N64 with similar result:
+
+ * Star Fox 64
+ * Mario 64
+ * Hydro Thunder
+ * Wave Race 64
+ * Perfect Dark
+ * Golden Eye
+
+PS1: TODO. 
+
+I imagine it works great given it already works pretty well on Raspberry Pi 3, and Tinker has around twice the horsepower.
 
 # Starting emulationstation
 
@@ -48,9 +88,9 @@ in a way I have not figured out, rendering keyboards unusable when **emulationst
 exits. Not even unpluging/repluging the keyboard will fix it but this work around will, 
 you must reboot otherwise.
 
-In the prebuilt images the "tinker" user has passwordless sudo rights for this particular service, 
-which is required for this workaround to work. The installer script inside the generated
-tarball will set this up for you if you are installing on you own image.
+In the prebuilt images, the "tinker" user has passwordless sudo rights for this particular service restart operation. 
+This is required for the ``keyboard-setup`` workaround to work.
+The installer script inside the generated tarball will set this up for you if you are installing on you own image.
 
 
 # Update RetroPie / Install more software
@@ -65,62 +105,34 @@ Then run: ``sudo ./retropie_setup.sh`` to start the setup script, which will all
 or install additional RetroPie packages by building them from source.
 
 
-# Performance
-
-The ``install.sh`` script from the generated installer tarball will install a boot time
-configuration that enables a CPU frequency boost up to 2.06GH (on_demand governor).
-
-Inside this same boot script, the devfreq support for Mali built into the kernel is taken advantage of 
-to pin the GPU to a 600MHz (its max clock).
-
-The script that does this is ``etc/init.d/cpugpufreqboost``, which is installed to ``/etc/init.d/cpugpufreqboost``
-by the install script.
-
-Make sure you have everything heatsinked with a fan, if you don't **IT WILL DAMAGE YOUR BOARD, I KILLED MY FIRST ONE**
-
-With this boot configuration, reicast (dreamcast emulator) and mupen64plus run surprisingly well.
-
-Games I have tested on reicast running pretty much full or playable speed: 
-
- * Dead Or Alive 2
- * Crazy Taxi 
- * Sonic Adventures 2
- * Rayman 2: The Great Escape
-
-Games I have tested on N64 with similar result:
-
- * Star Fox 64
- * Mario 64
- * Hydro Thunder
- * Wave Race 64
- * Perfect Dark
- * Golden Eye
-
-PS1: Todo, I imagine it works great given it works pretty well on PI and Tinker has at least twice the horsepower.
-
 
 # Build from source / install yourself
 
 Run ``build_installer.sh`` on your build machine.
 
-On the first run you will be prompted if you want to build Armbian from source, if you say no you will
+On the first run you will be prompted if you want to build Armbian from source, if you say "no" you will
 be asked for a path to an existing source tree where a build has been previously completed.
 
-If you choose to let my script build Armbian for you, it will configure it automaticaly for tinkerboard
+You will also be asked if you want access to the linux kernel configuration menu, for the kernel branch (linux kernel version), 
+and for the Armbian OS LIB_TAG (this is a tag/branch/commit-hash from the Armbian/build repository).
+
+If you are not sure about the prompts mentioned above, just hit enter to accept the default values.
+
+If you choose to let my script build Armbian for you, it will configure it automatically for Tinkerboard
 with Mali Midgard devfreq support enabled.
 
-If you are going to point it at your own source tree, you need to build Armbian using the "next" kernel,
-and enable Mali Midgard devfreq support from the kernel config menu before you build it.
+If you say "no" to the first prompt and are going to point it at your own source tree, 
+then you need to build Armbian using the "next" kernel and enable Mali Midgard devfreq support from
+the kernel config menu when building it yourself.
 
-The script expects to be pointed at the root directory of a built https://github.com/Armbian/build repository.
+The script expects to be pointed at the root directory of an already built https://github.com/Armbian/build repository.
 
-Building Armbian from source with my script will **require that you have docker installed** for simplicity.
+Building Armbian from source with ``build_installer.sh`` will **require that you have docker installed** for simplicity.
 
-When the script finishes running, **TinkerRetroPieInstaller.tar.gz** and the OS image will be left in the output directory.
+When the script finishes running, **TinkerRetroPieInstaller.tar.gz** and the OS image will be left in the ``output`` directory, which
+by default is in the same directory that ``build_installer.sh`` resides in.
 
-Flash the OS image and setup a non root user named to your liking.
-
-It is recommended that you set your user up to have passwordless sudo.
+After you have run ``build_installer.sh`` successfully, Flash the Armbian OS image and setup a non root user named to your liking.
 
 Log into that user and transfer **TinkerRetroPieInstaller.tar.gz** to their home directory.
 
@@ -131,9 +143,7 @@ Untar: ``tar -xvf TinkerRetroPieInstaller.tar.gz``
 
 Run: ``sudo ./TinkerRetroPieInstaller/install.sh``
 
-The script will install/build a bunch of requirements for RetroPie including userland GPU drivers.
-
-It will also enable a CPU boost to 2.06 GHz on boot, and a 600MHz clock speed for the Mali T760-MP4 GPU.
+The script will install/build a bunch of requirements for RetroPie, including userland GPU drivers and boot config.
 
 Once the script is done installing RetroPie requirements it will clone and launch the RetroPie setup script.
 
@@ -158,6 +168,56 @@ run the build over again.  If you have pointed this script at a build directory 
 An installer package will be generated overwriting the old one, and the most recently produced 
 Armbian image will be put into the output folder of the **TinkerRetroPie** build tree possibly 
 overwriting the last one that was produced.
+
+
+# Build without prompts / reproduce previous build
+
+Using ``--force-armbian-rebuild`` with any of the following command examples will force a complete
+rebuild of Armbian OS, which would normally not happen unless no images are found in the builds
+``output/images`` directory.
+
+```bash
+
+# Example 1, This will:
+
+# 1) Clone/update the Armbian/build repo at (scriptpath)/armbian_build
+# 2) Skip the kernel configuration menu
+# 3) Build with linux kernel at tag v4.14.71
+# 4) Checkout Armbian/build repo at commit c1530db (Armbian 5.60)
+
+./build_installer.sh BUILD_ARMBIAN=yes KERNEL_CONFIGURE=no KERNELBRANCH=tag:v4.14.71 LIB_TAG=c1530db
+
+# Example 2, This Will:
+
+# 1) Clone/update the Armbian/build repo to/at ARMBIAN_BUILD_PATH (./my_custom_build)
+# 2) Give access to the kernel configuration menu
+# 3) Build the kernel from the latest tag in the linux-4.14.y branch
+# 4) Checkout Armbian/build repo at the latest commit (master)
+
+./build_installer.sh ARMBIAN_BUILD_PATH=./my_custom_build \
+                     BUILD_ARMBIAN=yes \
+                     KERNEL_CONFIGURE=yes \
+                     KERNELBRANCH=branch:linux-4.14.y \
+                     LIB_TAG=master
+
+
+# Example 3, This Will:
+
+# 1.) Clone/update the Armbian/build repo at (scriptpath)/armbian_build
+# 2.) Skip the kernel configuration menu
+# 3.) Build the kernel from the latest tag in the linux-4.14.y branch
+# 4.) Checkout Armbian/build repo at the latest commit (master)
+#
+# 5.) Place the output image and installer tarball in ./my_custom_output_dir
+#     Creating the directory if it does not exist
+
+./build_installer.sh BUILD_ARMBIAN=yes \
+                     KERNEL_CONFIGURE=yes \
+                     KERNELBRANCH=branch:linux-4.14.y \
+                     LIB_TAG=master \
+                     OUTPUT_DIR=./my_custom_output_dir
+
+```
 
 # Create your own distributable image
 

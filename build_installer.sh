@@ -18,6 +18,18 @@ if [[ $@ == -h || $@ == --help ]]; then
     echo " Use --force-build-armbian to force an update"
     echo " of Armbian sources and a full rebuild."
     echo ""
+    echo " Automation Parameters: "
+    echo ""
+    echo " ARMBIAN_BUILD_PATH=(scriptpath)/armbian_build"
+    echo " BUILD_ARMBIAN=(yes/no)"
+    echo " KERNEL_CONFIGURE=(yes/no)"
+    echo " KERNELBRANCH=(branch:linux-4.14.y / tag:v4.14.71)"
+    echo " LIB_TAG=(master / sunxi-4.14)"
+    echo ""
+    echo " e.g:"
+    echo ""
+    echo " ./build_installer.sh BUILD_ARMBIAN=yes KERNEL_CONFIGURE=no KERNELBRANCH=branch:linux-4.14.y LIB_TAG=master"
+    echo ""
     exit 0
 fi
 
@@ -25,6 +37,18 @@ FORCE_BUILD_ARMBIAN=0
 if [[ $@ == --force-build-armbian ]]; then
     FORCE_BUILD_ARMBIAN=1
 fi
+
+for i in "$@"; do
+    if [[ $i == *=* ]]; then
+        parameter=${i%%=*}
+        value=${i##*=}
+        echo "Command line: setting $parameter to" "${value:-(empty)}"
+        eval $parameter=$value
+    fi
+done
+
+
+OUTPUT_DIR=${OUTPUT_DIR:-"$SCRIPTPATH/output"}
 
 DEFAULT_ARMBIAN_BUILD_DIR_NAME='armbian_build'
 ARMBIAN_OUTPUT_DIR_NAME='output'
@@ -35,7 +59,6 @@ ARMBIAN_BUILD_PATH=${ARMBIAN_BUILD_PATH:-"$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR
 ARMBIAN_OUTPUT_PATH="$ARMBIAN_BUILD_PATH/$ARMBIAN_OUTPUT_DIR_NAME"
 ARMBIAN_OUTPUT_IMAGES_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_IMAGES_DIR_NAME"
 ARMBIAN_OUTPUT_DEBS_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_DEBS_DIR_NAME"
-
 
 pushd() {
     command pushd "$@" >/dev/null
@@ -60,6 +83,19 @@ ask_yes_no() {
     fi
 }
 
+check_val_yes_no() {
+    ARG=${1,,}
+    if [[ $ARG -eq 1 || "$ARG" == y* ]]; then
+        echo $2
+        return 0
+    elif [[ $ARG -eq 0 || "$ARG" == n* ]]; then
+        echo $3
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Return 1 if images exist in $ARMBIAN_OUTPUT_IMAGES_DIR else 0
 armbian_images_exist() {
     if [ -d "$ARMBIAN_OUTPUT_IMAGES_DIR" ]; then
@@ -76,30 +112,42 @@ compile_armbian() {
         exit 1
     fi
  
-    echo "===================="
-    echo "What Armbian build branch do you want to use?"
-    echo "Enter a branch \"master\" or a tag, e.g. \"sunxi-4.14\""
-    echo "Enter nothing to default to \"master\"."
-    echo "===================="
-    read -e -p "Armbian Build Branch: " -i "master" LIB_TAG
-    echo ""
-    LIB_TAG=${LIB_TAG:-master}
+    if [ -z "$LIB_TAG" ]; then
+        echo "===================="
+        echo "What Armbian build branch do you want to use?"
+        echo "Enter a branch \"master\" or a tag, e.g. \"sunxi-4.14\""
+        echo "Enter nothing to default to \"master\"."
+        echo "===================="
+        read -e -p "Armbian Build Branch: " -i "master" LIB_TAG
+        echo ""
+        LIB_TAG=${LIB_TAG:-master}
+    fi
 
-    echo "===================="
-    echo "What kernel branch do you want to compile?"
-    echo "Enter a branch \"branch:linux-4.14.y\" or a tag \"tag:v4.14.71\""
-    echo "Enter nothing to default to \"branch:linux-4.14.y\", using the latest tag."
-    echo "===================="
-    read -e -p "Kernel Branch: " -i "branch:linux-4.14.y" KERNELBRANCH
-    echo ""
-    KERNELBRANCH=${KERNELBRANCH:-"branch:linux-4.14.y"}
+    if [ -z "$KERNELBRANCH" ]; then
+        echo "===================="
+        echo "What kernel branch do you want to compile?"
+        echo "Enter a branch \"branch:linux-4.14.y\" or a tag \"tag:v4.14.71\""
+        echo "Enter nothing to default to \"branch:linux-4.14.y\", using the latest tag."
+        echo "===================="
+        read -e -p "Kernel Branch: " -i "branch:linux-4.14.y" KERNELBRANCH
+        echo ""
+        KERNELBRANCH=${KERNELBRANCH:-"branch:linux-4.14.y"}
+    fi
 
-    echo "===================="
-    echo "Do you want to open the kernel config menu before the build starts?"
-    echo "===================="
+    if [ -z "$KERNEL_CONFIGURE" ]; then
+        echo "===================="
+        echo "Do you want to open the kernel config menu before the build starts?"
+        echo "===================="
 
-    ARMBIAN_CONFIGURE_KERNEL=$(ask_yes_no "no")
-    echo ""
+        KERNEL_CONFIGURE=$(ask_yes_no "no")
+        echo ""
+    else
+        KERNEL_CONFIGURE=$(check_val_yes_no "$KERNEL_CONFIGURE" "yes" "no")
+        if [ $? -ne 0 ]; then
+            echo "Value of KERNEL_CONFIGURE must be 1/0, y/n, or yes/no."
+            exit 1
+        fi
+    fi
 
     if [ -d "$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME" ]; then
         pushd "$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME"
@@ -123,7 +171,7 @@ compile_armbian() {
     sed 's/# CONFIG_MALI_DEVFREQ is not set/CONFIG_MALI_DEVFREQ=y/' \
         ./config/kernel/linux-rockchip-next.config >./userpatches/linux-rockchip-next.config
 
-    ./compile.sh docker KERNEL_CONFIGURE=$ARMBIAN_CONFIGURE_KERNEL KERNEL_ONLY=no \
+    ./compile.sh docker KERNEL_CONFIGURE=$KERNEL_CONFIGURE KERNEL_ONLY=no \
         BUILD_DESKTOP=no BOARD=tinkerboard \
         RELEASE=stretch BRANCH=next LIB_TAG=$LIB_TAG
     COMPILE_STATUS=$?
@@ -139,26 +187,28 @@ main() {
 
     if [[ $(armbian_images_exist) -eq 0 || $FORCE_BUILD_ARMBIAN -eq 1 ]]; then
 
-        if [ $FORCE_BUILD_ARMBIAN -eq 0 ]; then
-            echo "Could not find any previously built Armbian images in: "
-            echo ""
-            echo "$ARMBIAN_OUTPUT_IMAGES_DIR"
-            echo ""
-        fi
-
         CLONE_OR_UPDATE="clone"
         if [ -d "$ARMBIAN_BUILD_PATH" ]; then
             CLONE_OR_UPDATE="update"
         fi
 
-        echo "===================="
-        echo "Would you like to $CLONE_OR_UPDATE the Armbian-build repo and build Armbian?"
-        echo "This script will automaticly enable Mali Midgard devfreq kernel support."
-        echo "The build requires docker be installed."
-        echo "===================="
+        if [ -z "$BUILD_ARMBIAN" ]; then
 
-        BUILD_ARMBIAN=$(ask_yes_no "yes")
-        echo ""
+            echo "===================="
+            echo "Would you like to $CLONE_OR_UPDATE the Armbian-build repo and build Armbian?"
+            echo "This script will automaticly enable Mali Midgard devfreq kernel support."
+            echo "The build requires docker be installed."
+            echo "===================="
+
+            BUILD_ARMBIAN=$(ask_yes_no "yes")
+            echo ""
+        else
+            BUILD_ARMBIAN=$(check_val_yes_no "$BUILD_ARMBIAN" "yes" "no")
+            if [ $? -ne 0 ]; then
+                echo "Value of BUILD_ARMBIAN must be 1/0, y/n, or yes/no."
+                exit 1
+            fi
+        fi
 
         if [[ $BUILD_ARMBIAN == y* ]]; then
             if ! (compile_armbian); then
@@ -188,34 +238,44 @@ main() {
                 if ! [ -d "$USER_IMAGES_DIR" ]; then
                     echo "===================="
                     echo "\"$USER_BUILD_PATH\" does not contain an \"$IMAGES_DIR_STRUCT\" folder."
-                    echo "build Armbian first or try another path."
+                    echo "Build Armbian first or try another path."
                     echo "===================="
                 elif ! [ -d "$USER_DEBS_DIR" ]; then
                     echo "===================="
                     echo "\"$USER_BUILD_PATH\" does not contain an \"$DEBS_DIR_STRUCT\" folder."
-                    echo "build Armbian first or try another path."
+                    echo "Build Armbian first or try another path."
                     echo "===================="
                 else
                     ARMBIAN_BUILD_PATH=$(realpath "$USER_BUILD_PATH")
-                    FOUND_VALID_ARMBIAN_BUILD=1
+                    ARMBIAN_OUTPUT_PATH="$ARMBIAN_BUILD_PATH/$ARMBIAN_OUTPUT_DIR_NAME"
+                    ARMBIAN_OUTPUT_IMAGES_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_IMAGES_DIR_NAME"
+                    ARMBIAN_OUTPUT_DEBS_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_DEBS_DIR_NAME"
 
-                    echo "===================="
-                    echo "Found Armbian build at: \"$ARMBIAN_BUILD_PATH\""
-                    echo "===================="
+                    if [ $(armbian_images_exist) -eq 0 ]; then
+                        echo "===================="
+                        echo "\"$USER_BUILD_PATH/$IMAGES_DIR_STRUCT\" does not contain any built Armbian images."
+                        echo "Build Armbian first or try another path."
+                        echo "===================="
+                    else
+                        FOUND_VALID_ARMBIAN_BUILD=1
+                        echo "===================="
+                        echo "Found Armbian build at: \"$ARMBIAN_BUILD_PATH\""
+                        echo "===================="
+                    fi
+
                 fi
             done
         fi
     else
         ARMBIAN_BUILD_PATH=$(realpath "$ARMBIAN_BUILD_PATH")
+        ARMBIAN_OUTPUT_PATH="$ARMBIAN_BUILD_PATH/$ARMBIAN_OUTPUT_DIR_NAME"
+        ARMBIAN_OUTPUT_IMAGES_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_IMAGES_DIR_NAME"
+        ARMBIAN_OUTPUT_DEBS_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_DEBS_DIR_NAME"
 
         echo "===================="
         echo "Found Armbian build at: \"$ARMBIAN_BUILD_PATH\""
         echo "===================="
     fi
-
-    ARMBIAN_OUTPUT_PATH="$ARMBIAN_BUILD_PATH/$ARMBIAN_OUTPUT_DIR_NAME"
-    ARMBIAN_OUTPUT_IMAGES_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_IMAGES_DIR_NAME"
-    ARMBIAN_OUTPUT_DEBS_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_DEBS_DIR_NAME"
 
     echo "ARMBIAN_BUILD_PATH=\"$ARMBIAN_BUILD_PATH\"" >"$CACHE_FILE"
 
@@ -249,8 +309,8 @@ main() {
     echo "Packaging installer..."
     echo "======================"
 
-    mkdir -p "$SCRIPTPATH/output"
-    pushd "$SCRIPTPATH/output"
+    mkdir -p "$OUTPUT_DIR"
+    pushd "$OUTPUT_DIR"
 
     set -x
 
@@ -272,8 +332,10 @@ main() {
     echo "Done."
     echo "====="
 
-    echo "Flash: \"output/$RECENT_ARMBIAN_IMG\""
-    echo "Transfer \"output/TinkerRetroPieInstaller.tar.gz\" to your Tinker Board."
+    SHORT_OUTPUT_DIR_PATH=$(basename "$OUTPUT_DIR")
+
+    echo "Flash: \"$SHORT_OUTPUT_DIR_PATH/$RECENT_ARMBIAN_IMG\""
+    echo "Transfer \"$SHORT_OUTPUT_DIR_PATH/TinkerRetroPieInstaller.tar.gz\" to your Tinker Board."
     echo "Extract the archive and run: TinkerRetroPieInstaller/install.sh"
 
     popd

@@ -149,13 +149,18 @@ popd() {
 
     cp -v "$ETC_DIR/pulse/default.pa" /etc/pulse/
 
-    echo "======================================"
-    echo "Configuring CPU and GPU clockspeeds..."
-    echo "======================================"
+    echo "====================================="
+    echo "Configuring GPU clockspeed service..."
+    echo "====================================="
 
-    cp -v "$ETC_DIR/init.d/cpugpufreqboost" /etc/init.d
-    service cpugpufreqboost start
+    cp -v "$ETC_DIR/init.d/gpu-freqboost-tinker" /etc/init.d
 
+    chmod 755 /etc/init.d/gpu-freqboost-tinker
+
+    systemctl enable gpu-freqboost-tinker
+    if [ $? -ne 0 ]; then exit 1; fi
+
+    systemctl start gpu-freqboost-tinker
     if [ $? -ne 0 ]; then exit 1; fi
 
     echo "========================================="
