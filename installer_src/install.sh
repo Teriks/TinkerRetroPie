@@ -31,6 +31,11 @@ if [[ $@ == -h || $@ == --help ]]; then
     exit 0
 fi
 
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root."
+    exit 1
+fi
+
 for i in "$@"; do
     if [[ $i == *=* ]]; then
         parameter=${i%%=*}
@@ -39,11 +44,6 @@ for i in "$@"; do
         eval $parameter=$value
     fi
 done
-
-if [[ $EUID -ne 0 ]]; then
-    echo "This script must be run as root."
-    exit 1
-fi
 
 RETROPIE_BRANCH=${RETROPIE_BRANCH:-"master"}
 
