@@ -47,18 +47,17 @@ popd() {
 
 # 1 parameter, the default if no input
 ask_yes_no() {
-    while ! [[ "$ANSWER" == y* || "$ANSWER" == n* ]]; do
-        read -e -p "(y)es / (n)o: " -i "$1" ANSWER
+    while [[ "$ANSWER" != y* && "$ANSWER" != n* ]]; do
+        read -e -p "(y)es / (n)o: " -i "${1,,}" ANSWER
+        ANSWER=${ANSWER:-$1}
         ANSWER="${ANSWER,,}"
     done
-
+ 
     if [[ $ANSWER == y* ]]; then
-        ANSWER=yes
+        echo "yes"
     else
-        ANSWER=no
+        echo "no"
     fi
-
-    echo $ANSWER
 }
 
 # Return 1 if images exist in $ARMBIAN_OUTPUT_IMAGES_DIR else 0
@@ -76,14 +75,24 @@ compile_armbian() {
         echo "You do not have docker installed, install docker and try again. Exiting."
         exit 1
     fi
+ 
+    echo "===================="
+    echo "What Armbian build branch do you want to use?"
+    echo "Enter a branch \"master\" or a tag, e.g. \"sunxi-4.14\""
+    echo "Enter nothing to default to \"master\"."
+    echo "===================="
+    read -e -p "Armbian Build Branch: " -i "master" LIB_TAG
+    echo ""
+    LIB_TAG=${LIB_TAG:-master}
 
     echo "===================="
     echo "What kernel branch do you want to compile?"
-    echo "Enter a branch \"branch:linux-4.14.y\" or tag \"tag:v4.14.71\""
+    echo "Enter a branch \"branch:linux-4.14.y\" or a tag \"tag:v4.14.71\""
     echo "Enter nothing to default to \"branch:linux-4.14.y\", using the latest tag."
     echo "===================="
     read -e -p "Kernel Branch: " -i "branch:linux-4.14.y" KERNELBRANCH
     echo ""
+    KERNELBRANCH=${KERNELBRANCH:-"branch:linux-4.14.y"}
 
     echo "===================="
     echo "Do you want to open the kernel config menu before the build starts?"
@@ -116,7 +125,7 @@ compile_armbian() {
 
     ./compile.sh docker KERNEL_CONFIGURE=$ARMBIAN_CONFIGURE_KERNEL KERNEL_ONLY=no \
         BUILD_DESKTOP=no BOARD=tinkerboard \
-        RELEASE=stretch BRANCH=next
+        RELEASE=stretch BRANCH=next LIB_TAG=$LIB_TAG
     COMPILE_STATUS=$?
 
     popd
@@ -168,6 +177,7 @@ main() {
 
                 read -e -p 'Armbian build repo path: ' -i "$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME" USER_BUILD_PATH
                 echo ""
+                USER_BUILD_PATH=${USER_BUILD_PATH:-"$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME"}
 
                 IMAGES_DIR_STRUCT="$ARMBIAN_OUTPUT_DIR_NAME/$ARMBIAN_OUTPUT_IMAGES_DIR_NAME"
                 DEBS_DIR_STRUCT="$ARMBIAN_OUTPUT_DIR_NAME/$ARMBIAN_OUTPUT_DEBS_DIR_NAME"

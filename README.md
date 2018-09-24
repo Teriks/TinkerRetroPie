@@ -1,22 +1,22 @@
 # TinkerRetroPie
 
-TinkerRetroPie is a setup script generator for installing RetroPie on Tinker Boards (Armbian OS).
+TinkerRetroPie is an Armbian OS Build wrapper and install script generator for installing RetroPie on TinkerBoards.
 
-This repository also features Pre-Built images with RetroPie installed already, see the releases page.
+This repository also features Pre-Built images with RetroPie installed, see the releases page.
 
-TinkerRetroPie takes advantage of Mali Midgard (GPU) devfreq support in the newer kernels,
+TinkerRetroPie takes advantage of Mali Midgard (GPU) devfreq support in new linux kernels,
 in order to set the GPU to its max clock on system boot. (Normally locked to a low value)
 
 The ``build_installer.sh`` script can configure and build Armbian from source for you with 
 Mali Midgard (GPU) devfreq support (Userland device frequency manipulation).
 
 It will produce a tarball containing an installer script and its supporting files that you can
-run on your newly built image in order to install RetroPie.
+run on your newly built image to install RetroPie.
 
 You can also use a build that you have previously built by specifying its location when prompted,
 but you must enable Mali Midgard devfreq support in the kernel config menu.
 
-TinkerRetroPie uses the "next" branch of the kernel (4.14.*), and is based on Debian Stretch.
+TinkerRetroPie requires the "next" branch of the kernel (4.14.*), and is based on Debian Stretch.
 
 TinkerRetroPie uses the minimal server distribution as it's base, adding a desktop environment is untested/unsupported due
 to the finickiness of the userland Mali GPU drivers and X11.
@@ -48,10 +48,9 @@ in a way I have not figured out, rendering keyboards unusable when **emulationst
 exits. Not even unpluging/repluging the keyboard will fix it but this work around will, 
 you must reboot otherwise.
 
-In my images the tinker user has passwordless sudo rights, which is required
-for this workaround to work. If your setting up your own image just give your
-user the right to use sudo without a password, there is a few other quirks
-with **emulationstation** that this fixes as well.
+In the prebuilt images the "tinker" user has passwordless sudo rights for this particular service, 
+which is required for this workaround to work. The installer script inside the generated
+tarball will set this up for you if you are installing on you own image.
 
 
 # Update RetroPie / Install more software
@@ -74,12 +73,12 @@ configuration that enables a CPU frequency boost up to 2.06GH (on_demand governo
 Inside this same boot script, the devfreq support for Mali built into the kernel is taken advantage of 
 to pin the GPU to a 600MHz (its max clock).
 
-The script that does this is ``etc/cpufrequtils``, which is copied to ``/etc/default/cpufrequtils``
+The script that does this is ``etc/init.d/cpugpufreqboost``, which is installed to ``/etc/init.d/cpugpufreqboost``
 by the install script.
 
-Make sure you have everything heatsinked and/or a fan going.
+Make sure you have everything heatsinked with a fan, if you don't **IT WILL DAMAGE YOUR BOARD, I KILLED MY FIRST ONE**
 
-With this boot configuration, reicast (dreamcast emulator) and mupen64plus run suprisingly well.
+With this boot configuration, reicast (dreamcast emulator) and mupen64plus run surprisingly well.
 
 Games I have tested on reicast running pretty much full or playable speed: 
 

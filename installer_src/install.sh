@@ -141,20 +141,20 @@ popd() {
     echo "Configuring udev rules..."
     echo "========================="
 
-    cp -v "$ETC_DIR/99-evdev.rules" /etc/udev/rules.d/
+    cp -v "$ETC_DIR/udev/rules.d/99-evdev.rules" /etc/udev/rules.d/
 
     echo "=================================="
     echo "Configuring pulseaudio defaults..."
     echo "=================================="
 
-    cp -v "$ETC_DIR/default.pa" /etc/pulse/
+    cp -v "$ETC_DIR/pulse/default.pa" /etc/pulse/
 
     echo "======================================"
     echo "Configuring CPU and GPU clockspeeds..."
     echo "======================================"
 
-    cp -v "$ETC_DIR/cpufrequtils" /etc/default/cpufrequtils
-    service cpufrequtils restart
+    cp -v "$ETC_DIR/init.d/cpugpufreqboost" /etc/init.d
+    service cpugpufreqboost start
 
     if [ $? -ne 0 ]; then exit 1; fi
 
