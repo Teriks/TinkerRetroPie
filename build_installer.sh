@@ -168,7 +168,12 @@ compile_armbian() {
     echo "KERNELBRANCH='$KERNELBRANCH'" >./userpatches/lib.config
 
     # Enable MALI devfreq support
-    sed 's/# CONFIG_MALI_DEVFREQ is not set/CONFIG_MALI_DEVFREQ=y/' \
+    sed 's/# CONFIG_MALI_DEVFREQ is not set/CONFIG_MALI_DEVFREQ=y/
+         s/CONFIG_JOYSTICK_XPAD=y/# CONFIG_JOYSTICK_XPAD is not set/
+         s/CONFIG_JOYSTICK_XPAD_FF=y/# CONFIG_JOYSTICK_XPAD_FF is not set/
+         s/CONFIG_JOYSTICK_XPAD_LEDS=y/# CONFIG_JOYSTICK_XPAD_LEDS is not set/
+         s/CONFIG_INPUT_JOYDEV=y/CONFIG_INPUT_JOYDEV=m/
+         s/CONFIG_INPUT_EVDEV=y/CONFIG_INPUT_EVDEV=m/' \
         ./config/kernel/linux-rockchip-next.config >./userpatches/linux-rockchip-next.config
 
     ./compile.sh docker KERNEL_CONFIGURE=$KERNEL_CONFIGURE KERNEL_ONLY=no \
