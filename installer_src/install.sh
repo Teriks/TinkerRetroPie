@@ -166,15 +166,6 @@ popd() {
 
     popd
 
-    echo "========================="
-    echo "Configuring udev rules..."
-    echo "========================="
-
-    cp -v "$ETC_DIR/udev/rules.d/99-evdev.rules" /etc/udev/rules.d/
-    chmod 644 /etc/udev/rules.d/99-evdev.rules
-    udevadm control --reload-rules
-    if [ $? -ne 0 ]; then exit 1; fi
-
     echo "=================================="
     echo "Configuring pulseaudio defaults..."
     echo "=================================="
