@@ -11,7 +11,7 @@ The TinkerRetroPie install builder currently is tested and developed on Ubuntu 1
 TinkerRetroPie takes advantage of the Mali Midgard (GPU) devfreq support in newer linux kernels
 to set the GPU to its max clock (600 MHz) on system boot. (Normally left at 100 MHz)
 
-The ``build_installer.sh`` script can configure and build Armbian from source for you with 
+The `build_installer.sh` script can configure and build Armbian from source for you with 
 Mali Midgard (GPU) devfreq support (Userland device frequency manipulation). This kernel option
 is not enabled by default.
 
@@ -37,16 +37,16 @@ I have tested these emulators so far with good success:
 
 # Performance
 
-The ``install.sh`` script from the generated installer tarball will install an init.d
+The `install.sh` script from the generated installer tarball will install an init.d
 script that sets the GPU clock to its max frequency (600 MHz) and the GPU governor to "userspace".
 
-The script that does this is ``etc/init.d/gpu-freqboost-tinker``, which is installed to ``/etc/init.d/gpu-freqboost-tinker``
+The script that does this is `etc/init.d/gpu-freqboost-tinker`, which is installed to `/etc/init.d/gpu-freqboost-tinker`
 and enabled by the install script.
 
 Make sure you have heaksinks installed and are using some kind of fan to keep the device cool.
 
 In the case that you do not have adequate cooling, you can disable the frequency boost with: 
-``sudo systemctl disable gpu-freqboost-tinker`` (performance will suffer a lot)
+`sudo systemctl disable gpu-freqboost-tinker` (performance will suffer a lot)
 
 Make sure to restart after running the above command.
 
@@ -112,15 +112,15 @@ See: `/etc/sudoers.d/retropie` after the install process.
 # Update RetroPie / Install more software
 
 
-You can CD into ``~/RetroPie-Setup`` and run: ``git pull`` to fetch the latest setup script changes.
+You can CD into `~/RetroPie-Setup` and run: `git pull` to fetch the latest setup script changes.
 
-Then run: ``sudo ./retropie_setup.sh`` to start the setup script, which will allow you to update
+Then run: `sudo ./retropie_setup.sh` to start the setup script, which will allow you to update
 or install additional RetroPie packages by building them from source.
 
 
 # Build from source / install yourself
 
-Run ``build_installer.sh`` on your build machine.
+Run `build_installer.sh` on your build machine.
 
 On the first run you will be prompted if you want to build Armbian from source, if you say "no" you will
 be asked for a path to an existing source tree where a build has been previously completed.
@@ -130,21 +130,21 @@ and for the Armbian OS LIB_TAG (this is a tag/branch/commit-hash from the Armbia
 
 If you are not sure about the prompts mentioned above, just hit enter to accept the default values.
 
-Building Armbian from source with ``build_installer.sh`` will **require that you have docker installed** for simplicity.
+Building Armbian from source with `build_installer.sh` will **require that you have docker installed** for simplicity.
 
-When the script finishes running, **TinkerRetroPieInstaller.tar.gz** and the OS image will be left in the ``output`` directory, which
-by default is in the same directory that ``build_installer.sh`` resides in.
+When the script finishes running, **TinkerRetroPieInstaller.tar.gz** and the OS image will be left in the `output` directory, which
+by default is in the same directory that `build_installer.sh` resides in.
 
-After you have run ``build_installer.sh`` successfully, Flash the Armbian OS image and setup a non root user named to your liking.
+After you have run `build_installer.sh` successfully, Flash the Armbian OS image and setup a non root user named to your liking.
 
 Log into that user and transfer **TinkerRetroPieInstaller.tar.gz** to their home directory.
 
-If your not sure how to do that with ``rsync`` you can just power down your device, put the 
+If your not sure how to do that with `rsync` you can just power down your device, put the 
 SDCard back in your computer and place it there manually.
 
-Untar: ``tar -xvf TinkerRetroPieInstaller.tar.gz``
+Untar: `tar -xvf TinkerRetroPieInstaller.tar.gz`
 
-Run: ``sudo ./TinkerRetroPieInstaller/install.sh``
+Run: `sudo ./TinkerRetroPieInstaller/install.sh`
 
 The script will install/build a bunch of requirements for RetroPie, including userland GPU drivers and boot config.
 
@@ -154,7 +154,7 @@ This will bring up a blue menu where you can select "Basic Install".
 
 "Basic Install" will build and install all the core packages of RetroPie onto your system.
 
-You can restart the RetroPie config script to install additional packages later or update software by running ``sudo ~/RetroPie-Setup/retropie_setup.sh``
+You can restart the RetroPie config script to install additional packages later or update software by running `sudo ~/RetroPie-Setup/retropie_setup.sh`
 
 Once installed, you can launch emulationstation, see the **Starting emulationstation** section above for recommendations on how to start it.
 
