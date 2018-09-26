@@ -202,14 +202,14 @@ popd() {
     fi
 
     echo "Adding passwordless sudo for important retropie commands..."
+    cp -v "$ETC_DIR/etc/sudoers.d/retropie" /etc/sudoers.d
 
     set -x
 
-    echo "%retropie ALL=(ALL:ALL) NOPASSWD: $RETROPIE_SETUP_DIR/retropie_setup.sh" >/etc/sudoers.d/retropie
+    echo "%retropie ALL=(ALL:ALL) NOPASSWD: $RETROPIE_SETUP_DIR/retropie_setup.sh" >>/etc/sudoers.d/retropie
     echo "%retropie ALL=(ALL:ALL) NOPASSWD: $RETROPIE_SETUP_DIR/retropie_packages.sh" >>/etc/sudoers.d/retropie
-    echo "%retropie ALL=(ALL:ALL) NOPASSWD: /bin/systemctl restart keyboard-setup" >>/etc/sudoers.d/retropie
-    echo "%retropie ALL=(ALL:ALL) NOPASSWD: /usr/sbin/service keyboard-setup restart" >>/etc/sudoers.d/retropie
-    echo "%retropie ALL=(ALL:ALL) NOPASSWD: /opt/retropie/emulators/retroarch/bin/retroarch" >>/etc/sudoers.d/retropie
+
+    chmod 440 /etc/sudoers.d/retropie
 
     set +x
 

@@ -2,7 +2,9 @@
 
 TinkerRetroPie is an Armbian OS build wrapper and install script generator for installing RetroPie on TinkerBoards.
 
-This repository also features pre-built images with RetroPie installed, see the releases page.
+This repository will feature pre-built images with RetroPie installed once I have achieved a stable configuration, this is a WIP.
+
+## Features
 
 TinkerRetroPie takes advantage of the Mali Midgard (GPU) devfreq support in newer linux kernels
 to set the GPU to its max clock (600 MHz) on system boot. (Normally left at 100 MHz)
@@ -11,21 +13,25 @@ The ``build_installer.sh`` script can configure and build Armbian from source fo
 Mali Midgard (GPU) devfreq support (Userland device frequency manipulation). This kernel option
 is not enabled by default.
 
+It will also automatically modularize the 'joypad' and 'evdev' module (mostly for debugging reasons), and remove
+'xpad' all together so you may install RetroPie's or another version without issues.
+
 It will produce a tarball containing an installer script and its supporting files that you can
 run on your newly built image to install RetroPie.
 
 You can also use an Armbian build that you have previously built by specifying its location when prompted.
-But the build must have had Mali Midgard devfreq support enabled from kernel config menu.
+But the build must have had Mali Midgard devfreq support enabled from kernel config menu.  It is recommended
+to also manually modularize 'joypad' and 'evdev' from the kernel config menu, and remove 'xpad' completely.
 
 TinkerRetroPie requires the "next" branch of the kernel (4.14.*), and is only tested on images based on Debian Stretch.
 
 Install is only supported on the minimal server distribution. 
 Adding a desktop environment is untested/unsupported due to the finickiness of the userland Mali GPU drivers and X11.
 
-I have built these optional RetroPie packages in my prebuilt images:
+I have tested these emulators so far with good success:
 
  * reicast (dreamcast)
- * xboxdrv (works best for xbox controllers in my setup)
+ * lr-mupen64-plus
 
 # Performance
 
@@ -88,22 +94,26 @@ in a way I have not figured out, rendering keyboards unusable when **emulationst
 exits. Not even unpluging/repluging the keyboard will fix it but this work around will, 
 you must reboot otherwise.
 
-In the prebuilt images, the "tinker" user has passwordless sudo rights for this particular service restart operation. 
-This is required for the ``keyboard-setup`` workaround to work.
-The installer script inside the generated tarball will set this up for you if you are installing on you own image.
+You can also do this, which is slightly more robust.
+
+```bash
+
+echo 'sudo service keyboard-setup restart' | sudo tee --append /opt/retropie/emulators/reicast/bin/reicast.sh > /dev/null
+
+```
+
+The install script will give you passwordless sudo for this service command.
+
+See: `/etc/sudoers.d/retropie` after the install process.
 
 
 # Update RetroPie / Install more software
 
 
-I have left the **RetroPie-Setup** and **TinkerRetroPie** repositorys in my prebuilt images
-in the home directory of the tinker user.
-
 You can CD into ``~/RetroPie-Setup`` and run: ``git pull`` to fetch the latest setup script changes.
 
 Then run: ``sudo ./retropie_setup.sh`` to start the setup script, which will allow you to update
 or install additional RetroPie packages by building them from source.
-
 
 
 # Build from source / install yourself
@@ -117,15 +127,6 @@ You will also be asked if you want access to the linux kernel configuration menu
 and for the Armbian OS LIB_TAG (this is a tag/branch/commit-hash from the Armbian/build repository).
 
 If you are not sure about the prompts mentioned above, just hit enter to accept the default values.
-
-If you choose to let my script build Armbian for you, it will configure it automatically for Tinkerboard
-with Mali Midgard devfreq support enabled.
-
-If you say "no" to the first prompt and are going to point it at your own source tree, 
-then you need to build Armbian using the "next" kernel and enable Mali Midgard devfreq support from
-the kernel config menu when building it yourself.
-
-The script expects to be pointed at the root directory of an already built https://github.com/Armbian/build repository.
 
 Building Armbian from source with ``build_installer.sh`` will **require that you have docker installed** for simplicity.
 
@@ -156,14 +157,24 @@ You can restart the RetroPie config script to install additional packages later 
 Once installed, you can launch emulationstation, see the **Starting emulationstation** section above for recommendations on how to start it.
 
 
+## Optional patches
+
+See: `~/TinkerRetroPieInstaller/optional` for optional patches.
+
+Each patch contains a readme with details and instructions.
+
+The current available patches can be seen in this repository under `installer_src/optional`.
+
+The **latest-reicast-patch** will modify the RetroPie-Setup package so that it can install and build
+the latest version of reicast from their main repository, instead of using the outdated RetroPie fork.
+
 ## Forcing source update + rebuild
 
 Running ``build_installer.sh --force-armbian-rebuild`` will prompt you if you want to clone/update Armbian sources
-again even they are already present in the build tree. It also works if you have already told the script an 
-explicit build folder location other than the default one it clones for you.
+again even they are already present in the build tree.
 
 Saying 'yes' will cause the script to update the Armbian build script sources to their lastest version, and then
-run the build over again.  If you have pointed this script at a build directory you cloned yourself, it will update it.
+run the build over again.
 
 An installer package will be generated overwriting the old one, and the most recently produced 
 Armbian image will be put into the output folder of the **TinkerRetroPie** build tree possibly 
