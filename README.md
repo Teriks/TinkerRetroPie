@@ -156,6 +156,24 @@ You can restart the RetroPie config script to install additional packages later 
 
 Once installed, you can launch emulationstation, see the **Starting emulationstation** section above for recommendations on how to start it.
 
+## Install xpad / xboxdrv
+
+I recommend using xpad for Xbox / XInput controllers, install it from the `~/RetroPie-Setup/retropie_setup.sh` script.
+
+It is under the Drivers section.
+
+Once you have installed it do:
+
+```bash
+
+sudo modprobe xpad
+
+```
+
+To load the newly installed kernel module.
+
+You will need to do some research on configuring controllers with RetroPie, it is generally a pain.
+
 
 ## Optional patches
 
