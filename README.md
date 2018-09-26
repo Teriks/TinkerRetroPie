@@ -31,7 +31,7 @@ Adding a desktop environment is untested/unsupported due to the finickiness of t
 I have tested these emulators so far with good success:
 
  * reicast (dreamcast)
- * lr-mupen64-plus
+ * lr-mupen64plus
 
 # Performance
 
