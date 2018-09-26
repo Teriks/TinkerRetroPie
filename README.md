@@ -99,6 +99,8 @@ echo 'sudo service keyboard-setup restart' | sudo tee --append /opt/retropie/emu
 
 ```
 
+After you add that, reicast will automatically reconfigure the keyboard when it exits.
+
 The install script will give you passwordless sudo for this service command.
 
 See: `/etc/sudoers.d/retropie` after the install process.
