@@ -4,6 +4,8 @@ TinkerRetroPie is an Armbian OS build wrapper and install script generator for i
 
 This repository will feature pre-built images with RetroPie installed once I have achieved a stable configuration, this is a WIP.
 
+The TinkerRetroPie install builder currently is tested and developed on Ubuntu 18.04.1 LTS.
+
 ## Features
 
 TinkerRetroPie takes advantage of the Mali Midgard (GPU) devfreq support in newer linux kernels
