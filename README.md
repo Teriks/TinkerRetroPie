@@ -77,11 +77,6 @@ I imagine it works great given it already works pretty well on Raspberry Pi 3, a
 
 # Starting emulationstation
 
-If your using my prebuilt images, login: tinker, 1234
-
-In my prebuilt images, **emulationstation** is not setup to be booted into directly.
-
-Though this should not be too hard to setup yourself.
 
 I recommend starting **emulationstation** like this:
 
