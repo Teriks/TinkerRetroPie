@@ -188,7 +188,7 @@ the latest version of reicast from their main repository, instead of using the o
 
 ## Forcing source update + rebuild
 
-Running ``build_installer.sh --force-armbian-rebuild`` will prompt you if you want to clone/update Armbian sources
+Running `build_installer.sh --force-armbian-rebuild` will prompt you if you want to clone/update Armbian sources
 again even they are already present in the build tree.
 
 Saying 'yes' will cause the script to update the Armbian build script sources to their lastest version, and then
@@ -201,9 +201,9 @@ overwriting the last one that was produced.
 
 # Build without prompts / reproduce previous build
 
-Using ``--force-armbian-rebuild`` with any of the following command examples will force a complete
+Using `--force-armbian-rebuild` with any of the following command examples will force a complete
 rebuild of Armbian OS, which would normally not happen unless no images are found in the builds
-``output/images`` directory.
+`output/images` directory.
 
 ```bash
 
@@ -250,7 +250,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 # Create your own distributable image
 
-The ``squash_sd_img.sh`` can be used to shrink the filesystem on you SDCard to its minimal size,
+The `squash_sd_img.sh` can be used to shrink the filesystem on you SDCard to its minimal size,
 clone it to an image and then return the filesystem on your device back to normal.
 
 Note that this is probably not a great thing to do repeatedly to your SDCard, but it works.
@@ -258,13 +258,13 @@ Note that this is probably not a great thing to do repeatedly to your SDCard, bu
 If you are doing this for the Armbian image you just built and logged into, you should run
 this command first and then shutdown (dont restart before making an image):
 
-``sudo systemctl enable armbian-resize-filesystem``
+`sudo systemctl enable armbian-resize-filesystem`
 
 This command will enable Armbian's onshot systemd service that expands the filesystem back
 to its maximum size upon boot.  After the filesystem is expanded again the service disables itself.
 
 
-``bash
+```bash
 
 # Shrink /dev/mmcblk0p1
 # mmcblk0 is typicaly the name of your built in SDCard reader
@@ -281,7 +281,7 @@ to its maximum size upon boot.  After the filesystem is expanded again the servi
 # Your bootable minified image will be written to my_customized_image.img
 
 
-``
+```
 
 
 
