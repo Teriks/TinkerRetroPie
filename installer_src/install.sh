@@ -202,7 +202,7 @@ popd() {
     fi
 
     echo "Adding passwordless sudo for important retropie commands..."
-    cp -v "$ETC_DIR/etc/sudoers.d/retropie" /etc/sudoers.d
+    cp -v "$ETC_DIR/sudoers.d/retropie" /etc/sudoers.d
 
     set -x
 
