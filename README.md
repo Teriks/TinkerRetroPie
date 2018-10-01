@@ -223,7 +223,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 # Create your own distributable image
 
-The `squash_sd_img.sh` can be used to shrink the filesystem on you SDCard to its minimal size,
+The `tools/squash_sd_img.sh` script can be used to shrink the filesystem on you SDCard to its minimal size,
 clone it to an image and then return the filesystem on your device back to normal.
 
 Note that this is probably not a great thing to do repeatedly to your SDCard, but it works.
@@ -253,8 +253,18 @@ to its maximum size upon boot.  After the filesystem is expanded again the servi
 
 # Your bootable minified image will be written to my_customized_image.img
 
-
 ```
+
+## Reproduce the current release installer
+
+
+`tools/reproduce_cur_release.sh` can be used to build an identical Armbian image and installer tarball as used
+in the current release/state of this repository.
+
+The Armbian OS installer tag is pinned to the last tested version, as well as the kernel tag.
+
+
+
 
 
 
