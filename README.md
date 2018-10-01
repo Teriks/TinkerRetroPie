@@ -32,8 +32,11 @@ Adding a desktop environment is untested/unsupported due to the finickiness of t
 
 I have tested these emulators so far with good success:
 
- * reicast (dreamcast)
+ * reicast (the provided one)
+ * reicast-latest-tinker (TinkerRetroPie patch, installs the latest version)
  * lr-mupen64plus
+ * mupen64plus (TinkerRetroPie patch, builds the full version for tinker)
+ 
 
 # Performance
 
@@ -54,6 +57,8 @@ Make sure to restart after running the above command.
 ## Tested games
 
 With this boot configuration, reicast (dreamcast emulator) and mupen64plus run surprisingly well.
+
+Note: lr-mupen64plus runs a little bit faster at the moment than the full version of Mupen built for tinker.
 
 Games I have tested on reicast running pretty much full or playable speed: 
 
@@ -77,34 +82,14 @@ I imagine it works great given it already works pretty well on Raspberry Pi 3, a
 
 # Starting emulationstation
 
-
-I recommend starting **emulationstation** like this:
-
-```bash
-
-emulationstation && sudo service keyboard-setup restart
-
-```
-
-This is because some emulators (reicast...) will mess up your keyboard input
-in a way I have not figured out, rendering keyboards unusable when **emulationstation**
-exits. Not even unpluging/repluging the keyboard will fix it but this work around will, 
-you must reboot otherwise.
-
-You can also do this, which is slightly more robust.
+To start emulation station, just call the **emulationstation** command.
+It is on your path after installing RetroPie.
 
 ```bash
 
-echo 'sudo service keyboard-setup restart' | sudo tee --append /opt/retropie/emulators/reicast/bin/reicast.sh > /dev/null
+emulationstation
 
 ```
-
-After you add that, reicast will automatically reconfigure the keyboard when it exits.
-
-The install script will give you passwordless sudo for this service command.
-
-See: `/etc/sudoers.d/retropie` after the install process.
-
 
 # Update RetroPie / Install more software
 
@@ -173,17 +158,6 @@ To load the newly installed kernel module.
 
 You will need to do some research on configuring controllers with RetroPie, it is generally a pain.
 
-
-## Optional patches
-
-See: `~/TinkerRetroPieInstaller/optional` for optional patches.
-
-Each patch contains a readme with details and instructions.
-
-The current available patches can be seen in this repository under `installer_src/optional`.
-
-The **latest-reicast-patch** will modify the RetroPie-Setup package so that it can install and build
-the latest version of reicast from their main repository, instead of using the outdated RetroPie fork.
 
 ## Forcing source update + rebuild
 

@@ -9,6 +9,7 @@ TIMESTAMP=$(date "+%Y%m%d_%H%M")
 LOG_FILE="$SCRIPTPATH/install_$TIMESTAMP.log"
 
 PACKAGES_DIR="$SCRIPTPATH/packages"
+PATCHES_DIR="$SCRIPTPATH/patches"
 ETC_DIR="$SCRIPTPATH/etc"
 
 RETROPIE_SETUP_DIR=$(realpath "$SCRIPTPATH/../RetroPie-Setup")
@@ -57,58 +58,58 @@ popd() {
 
 (
 
-    echo "==========================="
-    echo "Installing prebuilt debs..."
-    echo "==========================="
+    # Install all package/*.deb files which have not been installed
 
-    pushd "$PACKAGES_DIR"
+    DEBS_TO_INSTALL=()
 
-    dpkg -i linux-headers-next-rockchip_*_armhf.deb \
-        armbian-config_*_all.deb \
-        armbian-firmware-full_*_all.deb \
-        armbian-tools-stretch_*_armhf.deb \
-        libmali-rk-midgard-t76x-r14p0-r0p0_1.6-1_armhf.deb \
-        libmali-rk-dev_1.6-1_armhf.deb \
-        librockchip-mpp1_20171218-2_armhf.deb \
-        librockchip-mpp-dev_20171218-2_armhf.deb \
-        librockchip-vpu0_20171218-2_armhf.deb
+    for i in "$PACKAGES_DIR"/*; do
+        pkg_name=$(dpkg --info $i | sed -n 's/Package:\s*\(.*\)/\1/p')
+        if [ $(dpkg-query -W -f='${Status}' $pkg_name 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+            DEBS_TO_INSTALL+=("$i")
+        fi
+    done
 
-    popd
+    if ! [ ${#DEBS_TO_INSTALL[@]} -eq 0 ]; then
 
-    echo "======================================="
-    echo "Installing prebuilt deb dependencies..."
-    echo "======================================="
+        echo "==========================="
+        echo "Installing prebuilt debs..."
+        echo "==========================="
 
-    if ! apt-get install -y -f; then
-        exit 1
+        dpkg -i "${DEBS_TO_INSTALL[@]}"
+
+        echo "======================================="
+        echo "Installing prebuilt deb dependencies..."
+        echo "======================================="
+
+        apt-get install -y -f || exit 1
     fi
 
     echo "=========================="
     echo "Installing dev packages..."
     echo "=========================="
 
+    set -e
+
     apt-get install -y libavdevice-dev libxkbcommon-dev libsm-dev libffi-dev libexpat1-dev libxml2-dev zlib1g-dev
-    if [ $? -ne 0 ]; then exit 1; fi
 
     # The packages below are required specifically to build SDL2-2.0.8
 
     apt-get install -y libgl1-mesa-dev libx11-dev libxcursor-dev libxext-dev libxi-dev \
-        libxinerama-dev libxrandr-dev libxss-dev libxxf86vm-dev
-    if [ $? -ne 0 ]; then exit 1; fi
+        libxinerama-dev libxrandr-dev libxss-dev libxxf86vm-dev 
+
+    set +e
 
     echo "========================="
     echo "Installing build tools..."
     echo "========================="
 
-    apt-get install -y libtool pkg-config
-    if [ $? -ne 0 ]; then exit 1; fi
+    apt-get install -y libtool pkg-config || exit 1
 
     echo "========================"
     echo "Installing pulseaudio..."
     echo "========================"
 
-    apt-get install -y pulseaudio pulseaudio-utils
-    if [ $? -ne 0 ]; then exit 1; fi
+    apt-get install -y pulseaudio pulseaudio-utils || exit 1
 
     echo "======================================"
     echo "Creating GLESv1 shared object symlinks"
@@ -154,42 +155,54 @@ popd() {
     echo "Cloning, building, and installing wayland from source..."
     echo "========================================================"
 
-    git clone git://anongit.freedesktop.org/wayland/wayland "$SCRIPTPATH/wayland"
+    set -e
+
+    if [ -d "$SCRIPTPATH/wayland" ]; then
+        pushd "$SCRIPTPATH/wayland"
+            git pull
+        popd
+    else
+        git clone git://anongit.freedesktop.org/wayland/wayland "$SCRIPTPATH/wayland"
+    fi
 
     pushd "$SCRIPTPATH/wayland"
 
-    ln -s /usr/share/libtool/build-aux/ltmain.sh .
+    ln -s -f /usr/share/libtool/build-aux/ltmain.sh .
 
-    if ! (./autogen.sh --disable-documentation && make -j4 && make install); then
-        exit 1
-    fi
+    ./autogen.sh --disable-documentation && make -j4 && make install
 
     popd
+
+    set +e
 
     echo "=================================="
     echo "Configuring pulseaudio defaults..."
     echo "=================================="
 
-    cp -v "$ETC_DIR/pulse/default.pa" /etc/pulse/
+    cp -v "$ETC_DIR/pulse/default.pa" /etc/pulse/ || exit 1
     chmod 644 /etc/pulse/default.pa
 
     echo "====================================="
     echo "Configuring GPU clockspeed service..."
     echo "====================================="
 
+    set -e
+
     cp -v "$ETC_DIR/init.d/gpu-freqboost-tinker" /etc/init.d
 
     chmod 755 /etc/init.d/gpu-freqboost-tinker
 
     systemctl enable gpu-freqboost-tinker
-    if [ $? -ne 0 ]; then exit 1; fi
 
     systemctl start gpu-freqboost-tinker
-    if [ $? -ne 0 ]; then exit 1; fi
+
+    set +e
 
     echo "========================================="
     echo "Configuring retropie group and sudoers..."
     echo "========================================="
+
+    set -e
 
     if ! getent group retropie; then
         echo "Creating group: retropie"
@@ -213,23 +226,39 @@ popd() {
 
     set +x
 
+    set -e
+
     echo "============================="
     echo "Cloning RetroPie-Setup to ../"
     echo "============================="
+    
+    set -e
 
     if [ -d "$RETROPIE_SETUP_DIR" ]; then
         pushd "$RETROPIE_SETUP_DIR"
-        if ! git pull; then exit 1; fi
-        if ! git checkout "$RETROPIE_BRANCH"; then exit 1; fi
+            git pull && git checkout "$RETROPIE_BRANCH"
         popd
     else
         git clone https://github.com/RetroPie/RetroPie-Setup "$RETROPIE_SETUP_DIR"
-        if [ $? -ne 0 ]; then exit 1; fi
 
         pushd "$RETROPIE_SETUP_DIR"
-            if ! git checkout "$RETROPIE_BRANCH"; then exit 1; fi
+            git checkout "$RETROPIE_BRANCH"
         popd
     fi
+
+    set +e
+
+    echo "=================================="
+    echo "Applying RetroPie-Setup Patches..."
+    echo "=================================="
+
+    set -e
+
+    for patch_dir in "$PATCHES_DIR"/*; do
+        "$patch_dir/patch.sh" "$RETROPIE_SETUP_DIR"
+    done
+
+    set +e
 
 ) 2>&1 | tee "$LOG_FILE"
 
