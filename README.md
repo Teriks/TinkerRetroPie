@@ -91,6 +91,18 @@ emulationstation
 
 ```
 
+# Mupen64plus gles2n64 screen size fix
+
+If your going to use the full version of Mupen instead of the default `lr-mupen64plus` emulator.
+
+The gles2n64 video plugin will need to have its Window Size manually adjusted since it currently
+cannot be determined automatically.
+
+Run Mupen with the gles2n64 video plugin once to generate a config (the screen will be tiny), then edit `/opt/retropie/configs/n64/gles2n64.conf` and manually set the correct window size for your display.
+
+This is the only Mupen graphics plugin that requires a manual adjustment to work correctly.
+
+
 # Update RetroPie / Install more software
 
 
