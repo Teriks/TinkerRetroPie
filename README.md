@@ -98,13 +98,15 @@ This is the only Mupen graphics plugin that requires a manual adjustment to work
 # Starting emulationstation
 
 To start emulation station, just call the **emulationstation** command.
-It is on your path after installing RetroPie.
+It is on your path after installing RetroPie. It will not be configured to start on boot automatically.
 
 ```bash
 
 emulationstation
 
 ```
+
+If you want to have **emulationstation** start on boot, refer to: [RetroPie-Setup Wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/FAQ#how-do-i-boot-to-the-desktop-or-kodi)
 
 # Update RetroPie / Install more software
 
