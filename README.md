@@ -158,6 +158,19 @@ To load the newly installed kernel module.
 
 You will need to do some research on configuring controllers with RetroPie, it is generally a pain.
 
+## Automated basic install + extra modules
+
+See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
+
+```bash
+
+# Automatically do a RetroPie basic install with some extra modules
+# without ever opening a GUI or asking for input
+
+
+./TinkerRetroPieInstaller/install.sh RETROPIE_BASIC_INSTALL=1 RETROPIE_INSTALL_MODULES="xpad reicast-tinker-latest"
+
+```
 
 ## Forcing source update + rebuild
 

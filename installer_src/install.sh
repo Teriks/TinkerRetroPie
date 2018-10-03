@@ -15,20 +15,45 @@ ETC_DIR="$SCRIPTPATH/etc"
 RETROPIE_SETUP_DIR=$(realpath "$SCRIPTPATH/../RetroPie-Setup")
 
 
-if [[ $@ == -h || $@ == --help ]]; then
-    echo "TinkerRetroPie installer."
-    echo ""
-    echo " Parameters: "
-    echo ""
-    echo " RETROPIE_BRANCH=(RetroPie-Setup git branch)"
-    echo ""
-    echo " e.g:"
-    echo ""
-    echo " ./installer.sh RETROPIE_BRANCH=master"
-    echo ""
-    echo " ./installer.sh RETROPIE_BRANCH=4.4"
-    echo ""
-    echo " ./installer.sh RETROPIE_BRANCH=ee8af99"
+if [[ "$@" =~ "-h" || $@ =~ "--help" ]]; then
+
+
+    echo "\
+Tinker RetroPie Installer
+
+ Select RetroPie-Setup branch (default is master):
+ 
+  RETROPIE_BRANCH=(RetroPie-Setup git branch)
+
+ e.g:
+
+  ./installer.sh RETROPIE_BRANCH=master
+
+  ./installer.sh RETROPIE_BRANCH=4.4
+
+  ./installer.sh RETROPIE_BRANCH=ee8af99
+
+ =======
+
+ Auto start RetroPie basic install (No GUI, default no):
+
+  RETROPIE_BASIC_INSTALL=(1,0,yes,no)
+
+ e.g:
+
+  ./installer.sh RETROPIE_BASIC_INSTALL=1
+
+ =======
+
+ Automaticly install additional modules (No GUI, default none):
+
+  RETROPIE_INSTALL_MODULES=\"modules1 modules2 modules3\"
+
+ e.g:
+
+  RETROPIE_INSTALL_MODULES=\"xpad reicast-tinker-latest\"
+
+"
     exit 0
 fi
 
@@ -47,6 +72,8 @@ for i in "$@"; do
 done
 
 RETROPIE_BRANCH=${RETROPIE_BRANCH:-"master"}
+RETROPIE_BASIC_INSTALL=0
+RETROPIE_INSTALL_MODULES=""
 
 pushd() {
     command pushd "$@" >/dev/null
@@ -269,10 +296,33 @@ if [ $INSTALL_STATUS -ne 0 ]; then
     exit $INSTALL_STATUS
 fi
 
-echo "=========================="
-echo "Starting RetroPie-Setup..."
-echo "=========================="
+RETROPIE_INSTALL_MODULES=($RETROPIE_INSTALL_MODULES)
 
-pushd "$RETROPIE_SETUP_DIR"
-./retropie_setup.sh
-popd
+if [ ${#RETROPIE_INSTALL_MODULES[@]} -ne 0 ]; then
+    echo "======================================"
+    echo "Installing RETROPIE_INSTALL_MODULES..."
+    echo "======================================"
+    
+    for module in "${RETROPIE_INSTALL_MODULES[@]}"; do
+        "$RETROPIE_SETUP_DIR/retropie_packages.sh $module" || exit 1
+        if [[ "$module" == xpad ]]; then
+            modprobe xpad
+        fi
+    done
+fi
+
+if [[ "${RETROPIE_BASIC_INSTALL,,}" == n* || ${RETROPIE_BASIC_INSTALL} -eq 0 ]]; then
+
+    echo "=============================="
+    echo "Starting RetroPie-Setup GUI..."
+    echo "=============================="
+
+    "$RETROPIE_SETUP_DIR/retropie_setup.sh"
+else
+
+    echo "========================================"
+    echo "Starting RetroPie-Setup basic install..."
+    echo "========================================"
+
+    "$RETROPIE_SETUP_DIR/retropie_packages.sh setup basic_install"
+fi
