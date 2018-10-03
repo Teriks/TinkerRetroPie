@@ -226,7 +226,7 @@ Armbian image will be put into the output folder of the **TinkerRetroPie** build
 overwriting the last one that was produced.
 
 
-# Build Armbian without prompts / reproduce previous build
+# Build Armbian without prompts
 
 Using `--force-armbian-rebuild` with any of the following command examples will force a complete
 rebuild of Armbian OS, which would normally not happen unless no images are found in the builds
