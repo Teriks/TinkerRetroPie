@@ -14,14 +14,11 @@ MODULE_DIR="$1/scriptmodules/emulators"
 MODULE_DEST="$MODULE_DIR/mupen64plus-tinker.sh"
 MODULE_DATA_DIR="$MODULE_DIR/mupen64plus/tinker"
 
-for i in "$@"; do
-    if [[ $i == *=* ]]; then
-        parameter=${i%%=*}
-        value=${i##*=}
-        echo "Command line: setting $parameter to" "${value:-(empty)}"
-        eval $parameter=$value
-    fi
-done
+if [ -f "$SCRIPTPATH/../installer.cfg" ]; then
+    source "$SCRIPTPATH/../installer.cfg"
+fi
+
+source "$SCRIPTPATH/../lib/read_params.sh"
 
 if grep 'rp_module_flags\s*=\s*".*!kms.*"' "$MODULE_DIR/mupen64plus.sh"; then
     # Only use this patch if the existing script module does not support kms

@@ -20,13 +20,17 @@ TinkerRetroPie install package generator.
  Use --force-build-armbian to force an update
  of Armbian sources and a full rebuild.
 
- Parameters: 
+ Armbian Build Parameters: 
 
   ARMBIAN_BUILD_PATH=(scriptpath)/armbian_build
   BUILD_ARMBIAN=(yes/no)
   KERNEL_CONFIGURE=(yes/no)
   KERNELBRANCH=(branch:linux-4.14.y / tag:v4.14.71)
   LIB_TAG=(master / sunxi-4.14)
+
+ TinkerRetroPie Installer Parameters:
+
+  TINKER_RETRO_PIE_CONFIG=(path to installer config file)
 
  e.g:
 
@@ -43,15 +47,7 @@ if [[ $@ == --force-build-armbian ]]; then
     FORCE_BUILD_ARMBIAN=1
 fi
 
-for i in "$@"; do
-    if [[ $i == *=* ]]; then
-        parameter=${i%%=*}
-        value=${i##*=}
-        echo "Command line: setting $parameter to" "${value:-(empty)}"
-        eval $parameter=$value
-    fi
-done
-
+source "$INSTALLER_DIR/lib/read_params.sh"
 
 OUTPUT_DIR=${OUTPUT_DIR:-"$SCRIPTPATH/output"}
 
@@ -325,10 +321,18 @@ main() {
 
     set -x
 
+    if [ -f "$TINKER_RETRO_PIE_CONFIG" ]; then
+        cp "$TINKER_RETRO_PIE_CONFIG" "$INSTALLER_DIR/installer.cfg"
+    fi
+
     INSTALLER_DIR_NAME=$(basename $INSTALLER_DIR)
     tar -czvf TinkerRetroPieInstaller.tar.gz \
         --transform "s/^$INSTALLER_DIR_NAME/TinkerRetroPieInstaller/" \
         -C "$SCRIPTPATH/" $INSTALLER_DIR_NAME
+
+    if [ -f "$INSTALLER_DIR/installer.cfg" ]; then
+        rm "$INSTALLER_DIR/installer.cfg"
+    fi
 
     set +x
 

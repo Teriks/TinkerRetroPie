@@ -15,14 +15,15 @@ if [ -z "${1+x}" ]; then
     exit 1
 fi
 
-for i in "$@"; do
-    if [[ $i == *=* ]]; then
-        parameter=${i%%=*}
-        value=${i##*=}
-        echo "Command line: setting $parameter to" "${value:-(empty)}"
-        eval $parameter=$value
-    fi
-done
+if [ -f "$SCRIPTPATH/../installer.cfg" ]; then
+    source "$SCRIPTPATH/../installer.cfg"
+fi
+
+if ! [ -z "${REICAST_LASTEST_TINKER_BRANCH+x}" ]; then
+    BRANCH="$REICAST_LASTEST_TINKER_BRANCH"
+fi
+
+source "$SCRIPTPATH/../lib/read_params.sh"
 
 echo "========="
 echo "Applying latest_reicast_patch"

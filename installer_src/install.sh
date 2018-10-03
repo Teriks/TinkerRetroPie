@@ -62,19 +62,11 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-for i in "$@"; do
-    if [[ $i == *=* ]]; then
-        parameter=${i%%=*}
-        value=${i##*=}
-        if [[ "$value" =~ ' ' ]]; then
-            echo "Command line: setting $parameter to" "\"${value:-(empty)}\""
-            eval $parameter="\"$value\""
-        else
-            echo "Command line: setting $parameter to" "${value:-(empty)}"
-            eval $parameter=$value
-        fi
-    fi
-done
+if [ -f "$SCRIPTPATH/installer.cfg" ]; then
+    source "$SCRIPTPATH/installer.cfg"
+fi
+
+source "$SCRIPTPATH/lib/read_params.sh"
 
 RETROPIE_BRANCH=${RETROPIE_BRANCH:-"master"}
 RETROPIE_BASIC_INSTALL=${RETROPIE_BASIC_INSTALL:-0}
@@ -307,13 +299,18 @@ if [ ${#RETROPIE_INSTALL_MODULES[@]} -ne 0 ]; then
     echo "======================================"
     echo "Installing RETROPIE_INSTALL_MODULES..."
     echo "======================================"
+
+    pushd "$RETROPIE_SETUP_DIR"
     
     for module in "${RETROPIE_INSTALL_MODULES[@]}"; do
-        "$RETROPIE_SETUP_DIR/retropie_packages.sh" "$module" || exit 1
+        ./retropie_packages.sh "$module" || exit 1
+
         if [[ "$module" == xpad ]]; then
             modprobe xpad
         fi
     done
+
+    popd
 fi
 
 if [[ "${RETROPIE_BASIC_INSTALL,,}" == n* || ${RETROPIE_BASIC_INSTALL} -eq 0 ]]; then
@@ -322,12 +319,20 @@ if [[ "${RETROPIE_BASIC_INSTALL,,}" == n* || ${RETROPIE_BASIC_INSTALL} -eq 0 ]];
     echo "Starting RetroPie-Setup GUI..."
     echo "=============================="
 
-    "$RETROPIE_SETUP_DIR/retropie_setup.sh"
+    pushd "$RETROPIE_SETUP_DIR"
+
+    ./retropie_setup.sh
+
+    popd
 else
 
     echo "========================================"
     echo "Starting RetroPie-Setup basic install..."
     echo "========================================"
 
-    "$RETROPIE_SETUP_DIR/retropie_packages.sh" setup basic_install
+    pushd "$RETROPIE_SETUP_DIR"
+
+    ./retropie_packages.sh setup basic_install
+
+    popd
 fi
