@@ -115,6 +115,15 @@ or install additional RetroPie packages by building them from source.
 
 # Build from source / install yourself
 
+See the: [Reproduce Release Section](##Reproduce-the-current-release) if you want to reproduce the current
+release image and installer tarball.  The following steps will create an installer using the latest software versions, which
+may or may not be tested.
+
+The instructions on flashing the image and running the TinkerRetroPie installer below
+are still relevant.
+
+===
+
 Run `build_installer.sh` on your build machine.
 
 On the first run you will be prompted if you want to build Armbian from source, if you say "no" you will
@@ -315,7 +324,6 @@ to its maximum size upon boot.  After the filesystem is expanded again the servi
 ```
 
 ## Reproduce the current release
-
 
 `tools/reproduce_cur_release.sh` can be used to build an identical Armbian image and installer tarball as used
 in the current release/state of this repository.
