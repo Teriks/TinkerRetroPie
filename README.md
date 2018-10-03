@@ -9,11 +9,15 @@ A bare image, an image with RetroPie preinstalled, and the current installer tar
 All release images with RetroPie installed will have the following credentials:
 
 ```
+
+# tinker is the user RetroPie is installed under.
+
 User: tinker
 Password: 1234
 
 User: root
 Password: 1234
+
 ```
 
 The TinkerRetroPie install builder is currently tested and developed on Ubuntu 18.04.1 LTS.
