@@ -125,6 +125,8 @@ are still relevant for installing the resulting artifacts.
 When you use the installer tarball from the reproduced release however, the entire install will be automated 
 with no dialogs.
 
+The Armbian OS Build will also be entirely automated with no prompts.
+
 ---
 
 Run `build_installer.sh` on your build machine.
