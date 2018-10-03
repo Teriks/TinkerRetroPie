@@ -107,7 +107,7 @@ emulationstation
 # Update RetroPie / Install more software
 
 
-You can CD into `~/RetroPie-Setup` and run: `git pull` to fetch the latest setup script changes.
+You can CD into `~/RetroPie-Setup` and run: `git pull origin master` to fetch the latest setup script changes.
 
 Then run: `sudo ./retropie_setup.sh` to start the setup script, which will allow you to update
 or install additional RetroPie packages by building them from source.
