@@ -127,7 +127,7 @@ with no dialogs.
 
 The Armbian OS Build will also be entirely automated with no prompts.
 
----
+## Build the latest everything
 
 Run `build_installer.sh` on your build machine.
 
