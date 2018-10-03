@@ -9,5 +9,5 @@ SCRIPTPATH="$(
                                     KERNEL_CONFIGURE=no \
                                     KERNELBRANCH=tag:v4.14.71 \
                                     LIB_TAG=c1530db \
-                                    TINKER_RETRO_PIE_CONFIG="$SCRIPTPATH/cur_installer.cfg"
+                                    TINKER_RETROPIE_CONFIG="$SCRIPTPATH/cur_installer.cfg"
                                    

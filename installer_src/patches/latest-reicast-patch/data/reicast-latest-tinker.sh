@@ -23,7 +23,10 @@ function depends_reicast-latest-tinker() {
 }
 
 function sources_reicast-latest-tinker() {
-    gitPullOrClone "$md_build" https://github.com/reicast/reicast-emulator.git "TINKER_RETRO_PIE_OPTIONAL_NEW_REICAST_BRANCH"
+    gitPullOrClone "$md_build" https://github.com/reicast/reicast-emulator.git \
+                               "TINKER_RETROPIE_REICAST_BRANCH" \
+                               "TINKER_RETROPIE_REICAST_COMMIT"
+
     applyPatch "$md_data/tinker-kms-makefile.patch"
 }
 

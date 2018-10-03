@@ -17,13 +17,14 @@ RETROPIE_SETUP_DIR=$(realpath "$SCRIPTPATH/../RetroPie-Setup")
 
 if [[ "$@" =~ "-h" || $@ =~ "--help" ]]; then
 
-
     echo "\
 Tinker RetroPie Installer
 
- Select RetroPie-Setup branch (default is master):
+ Select RetroPie-Setup branch/tag (default is master):
  
   RETROPIE_BRANCH=(RetroPie-Setup git branch)
+
+  git --branch option ...
 
  e.g:
 
@@ -31,7 +32,15 @@ Tinker RetroPie Installer
 
   ./installer.sh RETROPIE_BRANCH=4.4
 
-  ./installer.sh RETROPIE_BRANCH=ee8af99
+ =======
+
+ Select a RetroPie-Setup commit (default is latest):
+
+  RETROPIE_COMMIT=(commit hash)
+
+ e.g:
+
+  ./installer.sh RETROPIE_COMMIT=31ffdb0
 
  =======
 
@@ -68,9 +77,18 @@ fi
 
 source "$SCRIPTPATH/lib/read_params.sh"
 
+
+if [[ "${RETROPIE_BASIC_INSTALL,,}" == n* || "$RETROPIE_BASIC_INSTALL" == "0" ]]; then
+    RETROPIE_BASIC_INSTALL=0
+else
+    RETROPIE_BASIC_INSTALL=1
+fi
+
 RETROPIE_BRANCH=${RETROPIE_BRANCH:-"master"}
+RETROPIE_COMMIT=${RETROPIE_COMMIT:-""}
 RETROPIE_BASIC_INSTALL=${RETROPIE_BASIC_INSTALL:-0}
 RETROPIE_INSTALL_MODULES=${RETROPIE_INSTALL_MODULES:-""}
+
 
 pushd() {
     command pushd "$@" >/dev/null
@@ -260,14 +278,20 @@ popd() {
 
     if [ -d "$RETROPIE_SETUP_DIR" ]; then
         pushd "$RETROPIE_SETUP_DIR"
-            git pull && git checkout "$RETROPIE_BRANCH"
+            git pull
+            if [[ "$RETROPIE_COMMIT" ]]; then
+                git checkout "$RETROPIE_COMMIT"
+            fi
         popd
     else
-        git clone https://github.com/RetroPie/RetroPie-Setup "$RETROPIE_SETUP_DIR"
+        git clone --branch "$RETROPIE_BRANCH" https://github.com/RetroPie/RetroPie-Setup "$RETROPIE_SETUP_DIR"
 
-        pushd "$RETROPIE_SETUP_DIR"
-            git checkout "$RETROPIE_BRANCH"
-        popd
+        if [[ "$RETROPIE_COMMIT" ]]; then
+            echo "Rewinding RetroPie-Setup to commit: $RETROPIE_COMMIT"
+            pushd "$RETROPIE_SETUP_DIR"
+                git checkout "$RETROPIE_COMMIT"
+            popd
+        fi
     fi
 
     set +e
@@ -284,36 +308,64 @@ popd() {
 
     set +e
 
+    # Install any modules the user requested from the 
+    # command line first.
+
+    RETROPIE_INSTALL_MODULES=($RETROPIE_INSTALL_MODULES)
+
+    if [ ${#RETROPIE_INSTALL_MODULES[@]} -ne 0 ]; then
+        echo "======================================"
+        echo "Installing RETROPIE_INSTALL_MODULES..."
+        echo "======================================"
+
+        pushd "$RETROPIE_SETUP_DIR"
+    
+        for module in "${RETROPIE_INSTALL_MODULES[@]}"; do
+
+            ./retropie_packages.sh "$module" || exit 1
+
+            if [[ "$module" == xpad ]]; then
+                modprobe xpad
+            fi
+        done
+
+        popd
+    fi
+
+    # Do an automated basic install if requested
+    # and log it since auto logging is not enabled
+    # when doing it this way.
+
+    if [ $RETROPIE_BASIC_INSTALL -eq 1 ]; then
+
+        echo "========================================"
+        echo "Starting RetroPie-Setup basic install..."
+        echo "========================================"
+
+        pushd "$RETROPIE_SETUP_DIR"
+
+        ./retropie_packages.sh setup basic_install || exit 1
+
+        popd
+
+        echo "=============================="
+        echo "Install Completed Successfully"
+    fi
+
 ) 2>&1 | tee "$LOG_FILE"
+
 
 INSTALL_STATUS=${PIPESTATUS[0]}
 
 if [ $INSTALL_STATUS -ne 0 ]; then
-    echo "Pre install setup failed, see: \"$LOG_FILE\" for details."
+    echo "Install failed, see: \"$LOG_FILE\" for details."
     exit $INSTALL_STATUS
 fi
 
-RETROPIE_INSTALL_MODULES=($RETROPIE_INSTALL_MODULES)
+# Let retropie_setup.sh use its own built in logging
+# if the user did not request an automated basic install.
 
-if [ ${#RETROPIE_INSTALL_MODULES[@]} -ne 0 ]; then
-    echo "======================================"
-    echo "Installing RETROPIE_INSTALL_MODULES..."
-    echo "======================================"
-
-    pushd "$RETROPIE_SETUP_DIR"
-    
-    for module in "${RETROPIE_INSTALL_MODULES[@]}"; do
-        ./retropie_packages.sh "$module" || exit 1
-
-        if [[ "$module" == xpad ]]; then
-            modprobe xpad
-        fi
-    done
-
-    popd
-fi
-
-if [[ "${RETROPIE_BASIC_INSTALL,,}" == n* || "$RETROPIE_BASIC_INSTALL" == "0" ]]; then
+if [ $RETROPIE_BASIC_INSTALL -eq 0 ]; then
 
     echo "=============================="
     echo "Starting RetroPie-Setup GUI..."
@@ -322,17 +374,6 @@ if [[ "${RETROPIE_BASIC_INSTALL,,}" == n* || "$RETROPIE_BASIC_INSTALL" == "0" ]]
     pushd "$RETROPIE_SETUP_DIR"
 
     ./retropie_setup.sh
-
-    popd
-else
-
-    echo "========================================"
-    echo "Starting RetroPie-Setup basic install..."
-    echo "========================================"
-
-    pushd "$RETROPIE_SETUP_DIR"
-
-    ./retropie_packages.sh setup basic_install
 
     popd
 fi

@@ -5,6 +5,9 @@ SCRIPTPATH="$(
     pwd -P
 )"
 
+INSTALLER_DIR="$SCRIPTPATH/../.."
+LIB_DIR="$INSTALLER_DIR/lib"
+
 if [ -z "${1+x}" ]; then
     echo "Must provide RetroPie-Setup path".
     exit 1
@@ -14,11 +17,11 @@ MODULE_DIR="$1/scriptmodules/emulators"
 MODULE_DEST="$MODULE_DIR/mupen64plus-tinker.sh"
 MODULE_DATA_DIR="$MODULE_DIR/mupen64plus/tinker"
 
-if [ -f "$SCRIPTPATH/../installer.cfg" ]; then
-    source "$SCRIPTPATH/../installer.cfg"
+if [ -f "$INSTALLER_DIR/installer.cfg" ]; then
+    source "$INSTALLER_DIR/installer.cfg"
 fi
 
-source "$SCRIPTPATH/../lib/read_params.sh"
+source "$LIB_DIR/read_params.sh"
 
 if grep 'rp_module_flags\s*=\s*".*!kms.*"' "$MODULE_DIR/mupen64plus.sh"; then
     # Only use this patch if the existing script module does not support kms

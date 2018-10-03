@@ -5,7 +5,12 @@ SCRIPTPATH="$(
     pwd -P
 )"
 
+INSTALLER_DIR="$SCRIPTPATH/../.."
+LIB_DIR="$INSTALLER_DIR/lib"
+
+
 BRANCH=master
+COMMIT=''
 MODULE_DEST="$1/scriptmodules/emulators/reicast-latest-tinker.sh"
 MODULE_DATA_DIR="$1/scriptmodules/emulators/reicast-latest-tinker"
 
@@ -15,15 +20,19 @@ if [ -z "${1+x}" ]; then
     exit 1
 fi
 
-if [ -f "$SCRIPTPATH/../installer.cfg" ]; then
-    source "$SCRIPTPATH/../installer.cfg"
+if [ -f "$INSTALLER_DIR/installer.cfg" ]; then
+    source "$INSTALLER_DIR/installer.cfg"
 fi
 
-if ! [ -z "${REICAST_LASTEST_TINKER_BRANCH+x}" ]; then
-    BRANCH="$REICAST_LASTEST_TINKER_BRANCH"
+if ! [ -z "${REICAST_LATEST_TINKER_BRANCH+x}" ]; then
+    BRANCH="$REICAST_LATEST_TINKER_BRANCH"
 fi
 
-source "$SCRIPTPATH/../lib/read_params.sh"
+if ! [ -z "${REICAST_LATEST_TINKER_COMMIT+x}" ]; then
+    COMMIT="$REICAST_LATEST_TINKER_COMMIT"
+fi
+
+source "$LIB_DIR/read_params.sh"
 
 echo "========="
 echo "Applying latest_reicast_patch"
@@ -36,7 +45,8 @@ mkdir -p "$MODULE_DATA_DIR"
 
 cp "$SCRIPTPATH/data/reicast-latest-tinker.sh" "$MODULE_DEST"
 
-sed -i "s|TINKER_RETRO_PIE_OPTIONAL_NEW_REICAST_BRANCH|$BRANCH|" "$MODULE_DEST"
+sed -i "s|TINKER_RETROPIE_REICAST_BRANCH|$BRANCH|
+        s|TINKER_RETROPIE_REICAST_COMMIT|$COMMIT|" "$MODULE_DEST"
 
 cp "$SCRIPTPATH/data/tinker-kms-makefile.patch" "$MODULE_DATA_DIR"
 cp "$SCRIPTPATH/data/start-reicast-tinker.patch" "$MODULE_DATA_DIR"

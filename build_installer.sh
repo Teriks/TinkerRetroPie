@@ -321,8 +321,8 @@ main() {
 
     set -x
 
-    if [ -f "$TINKER_RETRO_PIE_CONFIG" ]; then
-        cp "$TINKER_RETRO_PIE_CONFIG" "$INSTALLER_DIR/installer.cfg"
+    if [ -f "$TINKER_RETROPIE_CONFIG" ]; then
+        cp "$TINKER_RETROPIE_CONFIG" "$INSTALLER_DIR/installer.cfg"
     fi
 
     INSTALLER_DIR_NAME=$(basename $INSTALLER_DIR)

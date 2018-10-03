@@ -171,9 +171,16 @@ See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
 ./TinkerRetroPieInstaller/install.sh RETROPIE_BASIC_INSTALL=1 \
                                      RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
 
-# You can also select a branch/tag/commit
+# You can also select a branch + commit
 
-./TinkerRetroPieInstaller/install.sh RETROPIE_BRANCH=ee8af99 \
+./TinkerRetroPieInstaller/install.sh RETROPIE_BRANCH=master \
+                                     RETROPIE_COMMIT=31ffdb0 \
+                                     RETROPIE_BASIC_INSTALL=1 \
+                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
+
+# Or a tag (via git --branch)
+
+./TinkerRetroPieInstaller/install.sh RETROPIE_BRANCH=4.4 \
                                      RETROPIE_BASIC_INSTALL=1 \
                                      RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
 
@@ -237,6 +244,25 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
                      KERNEL_CONFIGURE=yes \
                      KERNELBRANCH=branch:linux-4.14.y \
                      LIB_TAG=master \
+                     OUTPUT_DIR=./my_custom_output_dir
+
+
+# Example 4, This Will:
+
+# 1.) Clone/update the Armbian/build repo at (scriptpath)/armbian_build
+# 2.) Skip the kernel configuration menu
+# 3.) Build the kernel from the latest tag in the linux-4.14.y branch
+# 4.) Checkout Armbian/build repo at commit: c1530db (5.60)
+# 5.) Use the TinkerRetroPie installer config file at 'tools/cur_installer.cfg'
+#
+# 5.) Place the output image and installer tarball in ./my_custom_output_dir
+#     Creating the directory if it does not exist
+
+./build_installer.sh BUILD_ARMBIAN=yes \
+                     KERNEL_CONFIGURE=yes \
+                     KERNELBRANCH=branch:linux-4.14.y \
+                     LIB_TAG=c1530db \
+                     TINKER_RETROPIE_CONFIG="tools/cur_installer.cfg" \
                      OUTPUT_DIR=./my_custom_output_dir
 
 ```
