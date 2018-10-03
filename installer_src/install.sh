@@ -309,7 +309,7 @@ if [ ${#RETROPIE_INSTALL_MODULES[@]} -ne 0 ]; then
     echo "======================================"
     
     for module in "${RETROPIE_INSTALL_MODULES[@]}"; do
-        "$RETROPIE_SETUP_DIR/retropie_packages.sh $module" || exit 1
+        "$RETROPIE_SETUP_DIR/retropie_packages.sh" "$module" || exit 1
         if [[ "$module" == xpad ]]; then
             modprobe xpad
         fi
@@ -329,5 +329,5 @@ else
     echo "Starting RetroPie-Setup basic install..."
     echo "========================================"
 
-    "$RETROPIE_SETUP_DIR/retropie_packages.sh setup basic_install"
+    "$RETROPIE_SETUP_DIR/retropie_packages.sh" setup basic_install
 fi
