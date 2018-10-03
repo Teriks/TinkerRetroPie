@@ -119,8 +119,11 @@ See the: [Reproduce Release Section](#reproduce-the-current-release) if you want
 release image and installer tarball.  The following steps will create an installer using the latest software versions, which
 may or may not be tested.
 
-The instructions on flashing the image and running the TinkerRetroPie installer below
+The instructions on flashing the image and running the TinkerRetroPie installer script below
 are still relevant for installing the resulting artifacts.
+
+When you use the installer tarball from the reproduced release however, the entire install will be automated 
+with no dialogs.
 
 ---
 
