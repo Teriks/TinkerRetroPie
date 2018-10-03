@@ -115,14 +115,14 @@ or install additional RetroPie packages by building them from source.
 
 # Build from source / install yourself
 
-See the: [Reproduce Release Section](##Reproduce-the-current-release) if you want to reproduce the current
+See the: [Reproduce Release Section](#reproduce-the-current-release) if you want to reproduce the current
 release image and installer tarball.  The following steps will create an installer using the latest software versions, which
 may or may not be tested.
 
 The instructions on flashing the image and running the TinkerRetroPie installer below
-are still relevant.
+are still relevant for installing the resulting artifacts.
 
-===
+---
 
 Run `build_installer.sh` on your build machine.
 
