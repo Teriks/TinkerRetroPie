@@ -313,7 +313,7 @@ if [ ${#RETROPIE_INSTALL_MODULES[@]} -ne 0 ]; then
     popd
 fi
 
-if [[ "${RETROPIE_BASIC_INSTALL,,}" == n* || ${RETROPIE_BASIC_INSTALL} -eq 0 ]]; then
+if [[ "${RETROPIE_BASIC_INSTALL,,}" == n* || "$RETROPIE_BASIC_INSTALL" == "0" ]]; then
 
     echo "=============================="
     echo "Starting RetroPie-Setup GUI..."
