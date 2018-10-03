@@ -51,7 +51,7 @@ Tinker RetroPie Installer
 
  e.g:
 
-  RETROPIE_INSTALL_MODULES=\"xpad reicast-tinker-latest\"
+  RETROPIE_INSTALL_MODULES=\"xpad reicast-latest-tinker\"
 
 "
     exit 0

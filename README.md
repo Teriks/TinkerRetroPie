@@ -168,7 +168,7 @@ See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
 # without ever opening a GUI or asking for input
 
 
-./TinkerRetroPieInstaller/install.sh RETROPIE_BASIC_INSTALL=1 RETROPIE_INSTALL_MODULES="xpad reicast-tinker-latest"
+./TinkerRetroPieInstaller/install.sh RETROPIE_BASIC_INSTALL=1 RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
 
 ```
 
