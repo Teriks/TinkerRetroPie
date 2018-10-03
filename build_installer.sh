@@ -12,24 +12,29 @@ if [ -f "$CACHE_FILE" ]; then
     source "$CACHE_FILE"
 fi
 
-if [[ $@ == -h || $@ == --help ]]; then
-    echo "TinkerRetroPie install package generator."
-    echo ""
-    echo " Use --force-build-armbian to force an update"
-    echo " of Armbian sources and a full rebuild."
-    echo ""
-    echo " Automation Parameters: "
-    echo ""
-    echo " ARMBIAN_BUILD_PATH=(scriptpath)/armbian_build"
-    echo " BUILD_ARMBIAN=(yes/no)"
-    echo " KERNEL_CONFIGURE=(yes/no)"
-    echo " KERNELBRANCH=(branch:linux-4.14.y / tag:v4.14.71)"
-    echo " LIB_TAG=(master / sunxi-4.14)"
-    echo ""
-    echo " e.g:"
-    echo ""
-    echo " ./build_installer.sh BUILD_ARMBIAN=yes KERNEL_CONFIGURE=no KERNELBRANCH=branch:linux-4.14.y LIB_TAG=master"
-    echo ""
+if [[ "$@" =~ -h || "$@" =~ --help ]]; then
+
+    echo "\
+TinkerRetroPie install package generator.
+
+ Use --force-build-armbian to force an update
+ of Armbian sources and a full rebuild.
+
+ Parameters: 
+
+  ARMBIAN_BUILD_PATH=(scriptpath)/armbian_build
+  BUILD_ARMBIAN=(yes/no)
+  KERNEL_CONFIGURE=(yes/no)
+  KERNELBRANCH=(branch:linux-4.14.y / tag:v4.14.71)
+  LIB_TAG=(master / sunxi-4.14)
+
+ e.g:
+
+  ./build_installer.sh BUILD_ARMBIAN=yes \\ 
+                       KERNEL_CONFIGURE=no \\
+                       KERNELBRANCH=branch:linux-4.14.y \\
+                       LIB_TAG=master
+"
     exit 0
 fi
 
@@ -109,6 +114,7 @@ armbian_images_exist() {
 compile_armbian() {
     if [ $(dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         echo "You do not have docker installed, install docker and try again. Exiting."
+        echo "See: https://docs.docker.com/install/"
         exit 1
     fi
  
