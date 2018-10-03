@@ -283,11 +283,17 @@ in the current release/state of this repository.
 
 The Armbian OS installer tag is pinned to the last tested version, as well as the kernel tag.
 
-an **installer.cfg** file is written into the packaged installer tarball that will cause
+An **installer.cfg** file is written into the packaged installer tarball that will cause
 the installer to clone a specific version of RetroPie-Setup.
+
+**installer.cfg** will tell the installer to build RetroPie's "basic install", "xpad", and "reicast-latest-tinker"
+by default without prompting you for input.
 
 It will also configure the reicast-latest-tinker patch module to pull a specific version 
 of reicast from the main reicast repository when installing.
+
+The entire install will be automated after you kick off the install script.
+
 
 
 
