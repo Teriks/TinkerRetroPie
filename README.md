@@ -16,7 +16,7 @@ User: root
 Password: 1234
 ```
 
-The TinkerRetroPie install builder currently is tested and developed on Ubuntu 18.04.1 LTS.
+The TinkerRetroPie install builder is currently tested and developed on Ubuntu 18.04.1 LTS.
 
 ## Features
 
