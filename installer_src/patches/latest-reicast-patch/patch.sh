@@ -27,9 +27,9 @@ fi
 
 source "$LIB_DIR/read_params.sh"
 
-echo "========="
+echo "============================="
 echo "Applying latest_reicast_patch"
-echo "========="
+echo "============================="
 
 set -e
 set -x
@@ -47,5 +47,6 @@ cp "$SCRIPTPATH/data/start-reicast-tinker.patch" "$MODULE_DATA_DIR"
 set +x
 set +e
 
-echo "=========="
+echo "=============="
 echo "Patch Applied."
+echo "=============="

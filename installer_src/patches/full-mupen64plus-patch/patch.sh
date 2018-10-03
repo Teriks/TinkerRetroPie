@@ -58,9 +58,9 @@ source "$LIB_DIR/read_params.sh"
 if grep 'rp_module_flags\s*=\s*".*!kms.*"' "$MODULE_DIR/mupen64plus.sh"; then
     # Only use this patch if the existing script module does not support kms
 
-    echo "========="
+    echo "==============================="
     echo "Applying full-mupen64plus-patch"
-    echo "========="
+    echo "==============================="
 
     set -e
     set -x
@@ -102,12 +102,12 @@ if grep 'rp_module_flags\s*=\s*".*!kms.*"' "$MODULE_DIR/mupen64plus.sh"; then
     set +x
     set +e
 
-    echo "=========="
+    echo "=============="
     echo "Patch Applied."
-    echo "=========="
+    echo "=============="
 
 else
-    echo "=========="
+    echo "===================================="
     echo "full-mupen64plus-patch not required."
-    echo "=========="
+    echo "===================================="
 fi

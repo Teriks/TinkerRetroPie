@@ -278,7 +278,7 @@ popd() {
 
     if [ -d "$RETROPIE_SETUP_DIR" ]; then
         pushd "$RETROPIE_SETUP_DIR"
-            git pull
+            git pull origin "$RETROPIE_BRANCH"
             if [[ "$RETROPIE_COMMIT" ]]; then
                 git checkout "$RETROPIE_COMMIT"
             fi
@@ -344,7 +344,7 @@ popd() {
 
         pushd "$RETROPIE_SETUP_DIR"
 
-        ./retropie_packages.sh setup basic_install || exit 1
+        ./retropie_packages.sh tinker-basic-install install || exit 1
 
         popd
 
@@ -358,6 +358,7 @@ popd() {
 INSTALL_STATUS=${PIPESTATUS[0]}
 
 if [ $INSTALL_STATUS -ne 0 ]; then
+    echo "===================="
     echo "Install failed, see: \"$LOG_FILE\" for details."
     exit $INSTALL_STATUS
 fi
