@@ -158,7 +158,7 @@ To load the newly installed kernel module.
 
 You will need to do some research on configuring controllers with RetroPie, it is generally a pain.
 
-## Automated basic install + extra modules
+## Automate TinkerRetroPie basic install + extra modules
 
 See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
 
@@ -168,11 +168,18 @@ See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
 # without ever opening a GUI or asking for input
 
 
-./TinkerRetroPieInstaller/install.sh RETROPIE_BASIC_INSTALL=1 RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
+./TinkerRetroPieInstaller/install.sh RETROPIE_BASIC_INSTALL=1 \
+                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
+
+# You can also select a branch/tag/commit
+
+./TinkerRetroPieInstaller/install.sh RETROPIE_BRANCH=ee8af99 \
+                                     RETROPIE_BASIC_INSTALL=1 \
+                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
 
 ```
 
-## Forcing source update + rebuild
+## Forcing Armbian source update + rebuild
 
 Running `build_installer.sh --force-armbian-rebuild` will prompt you if you want to clone/update Armbian sources
 again even they are already present in the build tree.
@@ -185,7 +192,7 @@ Armbian image will be put into the output folder of the **TinkerRetroPie** build
 overwriting the last one that was produced.
 
 
-# Build without prompts / reproduce previous build
+# Build Armbian without prompts / reproduce previous build
 
 Using `--force-armbian-rebuild` with any of the following command examples will force a complete
 rebuild of Armbian OS, which would normally not happen unless no images are found in the builds

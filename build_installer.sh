@@ -291,10 +291,10 @@ main() {
     set -x
 
     pushd "$INSTALLER_DIR"
-    rm packages/linux-headers-next-rockchip_*_armhf.deb
-    rm packages/armbian-config_*_all.deb
-    rm packages/armbian-firmware-full_*_all.deb
-    rm packages/armbian-tools-stretch_*_armhf.deb
+    rm -f packages/linux-headers-next-rockchip_*_armhf.deb
+    rm -f packages/armbian-config_*_all.deb
+    rm -f packages/armbian-firmware-full_*_all.deb
+    rm -f packages/armbian-tools-stretch_*_armhf.deb
     popd
 
     pushd "$ARMBIAN_OUTPUT_DEBS_DIR"
