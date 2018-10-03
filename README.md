@@ -8,8 +8,7 @@ A bare image, an image with RetroPie preinstalled, and the current installer tar
 
 All release images with RetroPie installed will have the following credentials:
 
-```
-
+```bash
 # tinker is the user RetroPie is installed under.
 
 User: tinker
