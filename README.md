@@ -81,17 +81,6 @@ PS1: TODO.
 I imagine it works great given it already works pretty well on Raspberry Pi 3, and Tinker has around twice the horsepower.
 
 
-# Starting emulationstation / Misc Notes
-
-To start emulation station, just call the **emulationstation** command.
-It is on your path after installing RetroPie.
-
-```bash
-
-emulationstation
-
-```
-
 ## Mupen64plus gles2n64 screen size fix
 
 If your going to use the full version of Mupen instead of the default `lr-mupen64plus` emulator.
@@ -103,6 +92,17 @@ Run Mupen with the gles2n64 video plugin once to generate a config (the screen w
 
 This is the only Mupen graphics plugin that requires a manual adjustment to work correctly.
 
+
+# Starting emulationstation
+
+To start emulation station, just call the **emulationstation** command.
+It is on your path after installing RetroPie.
+
+```bash
+
+emulationstation
+
+```
 
 # Update RetroPie / Install more software
 
