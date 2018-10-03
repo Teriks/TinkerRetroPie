@@ -314,7 +314,7 @@ to its maximum size upon boot.  After the filesystem is expanded again the servi
 
 ```
 
-## Reproduce the current release installer
+## Reproduce the current release
 
 
 `tools/reproduce_cur_release.sh` can be used to build an identical Armbian image and installer tarball as used
