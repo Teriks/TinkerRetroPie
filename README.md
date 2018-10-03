@@ -6,6 +6,16 @@ See the [Releases](https://github.com/Teriks/TinkerRetroPie/releases) page for t
 
 A bare image, an image with RetroPie preinstalled, and the current installer tarball is attached to each release.
 
+All release images with RetroPie installed will have the following credentials:
+
+```
+User: tinker
+Password: 1234
+
+User: root
+Password: 1234
+```
+
 The TinkerRetroPie install builder currently is tested and developed on Ubuntu 18.04.1 LTS.
 
 ## Features
