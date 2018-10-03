@@ -6,7 +6,7 @@ while getopts ":h" opt; do
       echo "This script takes two arguments, a device partition and an image out file path."
       echo "Usage is shown with default values. This script must be run as root."
       echo "================================"
-      echo "Usage: squashpi /dev/mmcblkp0p1 image_out.img"
+      echo "Usage: squash_sd_img /dev/mmcblkp0p1 image_out.img"
       ;;
     \?)
       echo "Invalid option: -$OPTARG"
