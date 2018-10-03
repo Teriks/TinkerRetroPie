@@ -43,7 +43,9 @@ function sources_mupen64plus() {
         dir="$md_build/mupen64plus-${repo[1]}"
         gitPullOrClone "$dir" https://github.com/${repo[0]}/mupen64plus-${repo[1]} ${repo[2]} ${repo[3]}
     done
-    gitPullOrClone "$md_build/GLideN64" https://github.com/gonetz/GLideN64.git
+    gitPullOrClone "$md_build/GLideN64" https://github.com/gonetz/GLideN64.git \
+                                        "GONETZ_GLIDEN64_BRANCH" \
+                                        "GONETZ_GLIDEN64_COMMIT"
 
     # workaround for shader cache crash issue on Raspbian stretch. See: https://github.com/gonetz/GLideN64/issues/1665
     applyPatch "$md_data/0001-GLideN64-use-emplace.patch"
