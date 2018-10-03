@@ -24,17 +24,16 @@ function depends_mupen64plus() {
 }
 
 function sources_mupen64plus() {
-    local commit
 
     local repos=(
-        "mupen64plus core ${commit[0]}"
-        'mupen64plus ui-console'
-        'mupen64plus audio-sdl'
-        'mupen64plus input-sdl'
-        'mupen64plus rsp-hle'
-        'ricrpi video-gles2n64'
-        'mupen64plus video-glide64mk2'
-        'ricrpi video-gles2rice pandora-backport'
+        "mupen64plus core MUPEN64PLUS_CORE_BRANCH MUPEN64PLUS_CORE_COMMIT"
+        'mupen64plus ui-console MUPEN64PLUS_UI_CONSOLE_BRANCH MUPEN64PLUS_UI_CONSOLE_COMMIT'
+        'mupen64plus audio-sdl MUPEN64PLUS_AUDIO_SDL_BRANCH MUPEN64PLUS_AUDIO_SDL_COMMIT'
+        'mupen64plus input-sdl MUPEN64PLUS_INPUT_SDL_BRANCH MUPEN64PLUS_INPUT_SDL_COMMIT'
+        'mupen64plus rsp-hle MUPEN64PLUS_RSP_HLE_BRANCH MUPEN64PLUS_RSP_HLE_COMMIT'
+        'ricrpi video-gles2n64 RICRPI_VIDEO_GLES2N64_BRANCH RICRPI_VIDEO_GLES2N64_COMMIT'
+        'mupen64plus video-glide64mk2 MUPEN64PLUS_VIDEO_GLIDE64MK2_BRANCH MUPEN64PLUS_VIDEO_GLIDE64MK2_COMMIT'
+        'ricrpi video-gles2rice RICRPI_VIDEO_GLES2RICE_BRANCH RICRPI_VIDEO_GLES2RICE_COMMIT'
     )
 
     local repo
