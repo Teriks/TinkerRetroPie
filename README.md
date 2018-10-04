@@ -96,16 +96,50 @@ PS1: TODO.
 I imagine it works great given it already works pretty well on Raspberry Pi 3, and Tinker has around twice the horsepower.
 
 
-## Mupen64plus gles2n64 screen size fix
+## Manual mupen64plus screen size fixes
 
-If your going to use the full version of Mupen instead of the default `lr-mupen64plus` emulator.
+If your going to use the full version of Mupen instead of the default `lr-mupen64plus` emulator,
+you will need to manually fix the screen resolution in two config files so that all of the packaged
+video plugins work correctly.
+
+### gles2n64 fix
 
 The gles2n64 video plugin will need to have its Window Size manually adjusted since it currently
 cannot be determined automatically.
 
-Run Mupen with the gles2n64 video plugin once to generate a config (the screen will be tiny), then edit `/opt/retropie/configs/n64/gles2n64.conf` and manually set the correct window size for your display.
+Run Mupen with the gles2n64 video plugin once to generate a default config (the screen will be tiny), close RetroPie and then edit `/opt/retropie/configs/n64/gles2n64.conf` and manually set the correct window size for your display.
 
-This is the only Mupen graphics plugin that requires a manual adjustment to work correctly.
+```bash
+
+#Window Settings:
+window width=(your monitor screen width)
+window height=(your monitor screen height)
+
+```
+
+### GLideN64, gles2rice, glide64 fix
+
+This one configuration change will fix the output resolution of all three mupen64plus plugins mentioned above.
+
+Open: `/opt/retropie/configs/n64/mupen64plus.cfg`
+
+```bash
+
+sudo nano /opt/retropie/configs/n64/mupen64plus.cfg
+
+```
+
+Scroll down to the `[Video-General]` section, and edit:
+
+```
+ScreenWidth = (your monitor screen width)
+ScreenHeight = (your monitor screen height)
+
+```
+
+*Tip:* you can search in nano by pressing CTRL+W
+
+After you have set these to the correct values, all three plugins will display video properly.
 
 
 # Starting emulationstation
