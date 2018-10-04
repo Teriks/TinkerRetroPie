@@ -163,10 +163,8 @@ nano /opt/retropie/configs/n64/mupen64plus.cfg
 Scroll down to the `[Video-General]` section, and edit:
 
 ```
-
 ScreenWidth = (your monitor screen width)
 ScreenHeight = (your monitor screen height)
-
 ```
 
 *Tip:* you can search in nano by pressing CTRL+W
