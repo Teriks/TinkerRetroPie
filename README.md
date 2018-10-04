@@ -126,7 +126,7 @@ window height=(your monitor screen height)
 
 ```
 
-### GLideN64, gles2rice, glide64 fix
+### GLideN64, gles2rice, and glide64 fix
 
 This one configuration change will fix the output resolution of all three mupen64plus plugins mentioned above.
 
