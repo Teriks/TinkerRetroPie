@@ -127,7 +127,7 @@ be rendered tiny in the bottom left corner of your display until you do.
 The gles2n64 video plugin will need to have its window size manually adjusted since it currently
 cannot be determined automatically.
 
-Run Mupen with the gles2n64 video plugin once with a compatible ROM to generate a default config (the screen will be tiny), close RetroPie and then edit `/opt/retropie/configs/n64/gles2n64.conf` and manually set the correct window size for your display.
+Run Mupen with the gles2n64 video plugin once with a compatible ROM to generate a default config (the screen will be tiny), close RetroPie and then edit `/opt/retropie/configs/n64/gles2n64.conf`. Manually set the correct window size for your display.
 
 Make sure you run a ROM that is not affected by the start scripts ROM compatibility check so that the default config file is actually generated. I chose `Super Mario 64` since it actually starts up using the `gles2n64` video plugin and does not automatically divert to using `GLideN64` or something else.
 
