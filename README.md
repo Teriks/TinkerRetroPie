@@ -119,11 +119,12 @@ I imagine it works great given it already works pretty well on Raspberry Pi 3, a
 
 If your going to use the full version of Mupen instead of the default `lr-mupen64plus` emulator,
 you will need to manually fix the screen resolution in two config files so that all of the packaged
-video plugins work correctly.
+video plugins work correctly. If you do not set the proper resolution in these files, the screen will
+be rendered tiny in the bottom left corner of your display until you do.
 
 ## gles2n64 fix
 
-The gles2n64 video plugin will need to have its Window Size manually adjusted since it currently
+The gles2n64 video plugin will need to have its window size manually adjusted since it currently
 cannot be determined automatically.
 
 Run Mupen with the gles2n64 video plugin once to generate a default config (the screen will be tiny), close RetroPie and then edit `/opt/retropie/configs/n64/gles2n64.conf` and manually set the correct window size for your display.
