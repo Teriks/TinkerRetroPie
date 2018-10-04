@@ -112,7 +112,7 @@ Run Mupen with the gles2n64 video plugin once to generate a default config (the 
 
 ```bash
 
-sudo nano /opt/retropie/configs/n64/gles2n64.conf
+nano /opt/retropie/configs/n64/gles2n64.conf
 
 ```
 
@@ -134,7 +134,7 @@ Open: `/opt/retropie/configs/n64/mupen64plus.cfg`
 
 ```bash
 
-sudo nano /opt/retropie/configs/n64/mupen64plus.cfg
+nano /opt/retropie/configs/n64/mupen64plus.cfg
 
 ```
 
