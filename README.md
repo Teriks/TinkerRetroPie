@@ -160,7 +160,7 @@ nano /opt/retropie/configs/n64/mupen64plus.cfg
 
 ```
 
-Scroll down to the `[Video-General]` section, and edit:
+Scroll down to the `[Video-General]` section, and edit or add:
 
 ```
 ScreenWidth = (your monitor screen width)
