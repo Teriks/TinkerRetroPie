@@ -21,7 +21,26 @@ Password: 1234
 
 The TinkerRetroPie install builder is currently tested and developed on Ubuntu 18.04.1 LTS.
 
-## Features
+## TOC
+
+  * [Features](#features)
+  * [Performance](#performance)
+    * [Tested games](#tested-games)
+  * [Manual mupen64plus screen size fixes](#manual-mupen64plus-screen-size-fixes)
+    * [gles2n64 fix](#gles2n64-fix)
+    * [GLideN64, gles2rice, and glide64 fix](#gliden64-gles2rice-and-glide64-fix)
+  * [Starting emulationstation](#starting-emulationstation)
+  * [Update RetroPie / Install more software](#update-retropie--install-more-software)
+  * [Build from source / Install yourself](#build-from-source--install-yourself)
+    * [Build the latest everything](#build-the-latest-everything)
+    * [Install xpad / xboxdrv](#install-xpad--xboxdrv)
+    * [Automate TinkerRetroPie basic install + extra modules](#automate-tinkerretropie-basic-install--extra-modules)
+    * [Forcing Armbian source update + rebuild](#forcing-armbian-source-update--rebuild)
+    * [Build Armbian without prompts](#build-armbian-without-prompts)
+    * [Reproduce the current release](#reproduce-the-current-release)
+  * [Create your own distributable image](#create-your-own-distributable-image)
+
+# Features
 
 TinkerRetroPie takes advantage of the Mali Midgard (GPU) devfreq support in newer linux kernels
 to set the GPU to its max clock (600 MHz) on system boot. (Normally left at 100 MHz)
@@ -96,13 +115,13 @@ PS1: TODO.
 I imagine it works great given it already works pretty well on Raspberry Pi 3, and Tinker has around twice the horsepower.
 
 
-## Manual mupen64plus screen size fixes
+# Manual mupen64plus screen size fixes
 
 If your going to use the full version of Mupen instead of the default `lr-mupen64plus` emulator,
 you will need to manually fix the screen resolution in two config files so that all of the packaged
 video plugins work correctly.
 
-### gles2n64 fix
+## gles2n64 fix
 
 The gles2n64 video plugin will need to have its Window Size manually adjusted since it currently
 cannot be determined automatically.
@@ -126,7 +145,7 @@ window height=(your monitor screen height)
 
 ```
 
-### GLideN64, gles2rice, and glide64 fix
+## GLideN64, gles2rice, and glide64 fix
 
 This one configuration change will fix the output resolution of all three mupen64plus plugins mentioned above.
 
@@ -173,7 +192,7 @@ Then run: `sudo ./retropie_setup.sh` to start the setup script, which will allow
 or install additional RetroPie packages by building them from source.
 
 
-# Build from source / install yourself
+# Build from source / Install yourself
 
 See the: [Reproduce Release Section](#reproduce-the-current-release) if you want to reproduce the current
 release image and installer tarball.  The following steps will create an installer using the latest software versions, which
@@ -286,7 +305,7 @@ Armbian image will be put into the output folder of the **TinkerRetroPie** build
 overwriting the last one that was produced.
 
 
-# Build Armbian without prompts
+## Build Armbian without prompts
 
 Using `--force-armbian-rebuild` with any of the following command examples will force a complete
 rebuild of Armbian OS, which would normally not happen unless no images are found in the builds
@@ -354,6 +373,24 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 ```
 
+## Reproduce the current release
+
+`tools/reproduce_cur_release.sh` can be used to build an identical Armbian image and installer tarball as used
+in the current release/state of this repository.
+
+The Armbian OS installer tag is pinned to the last tested version, as well as the kernel tag.
+
+An **installer.cfg** file is written into the packaged installer tarball that will cause
+the installer to clone a specific version of RetroPie-Setup.
+
+**installer.cfg** will tell the installer to build RetroPie's "basic install", "xpad", and "reicast-latest-tinker"
+by default without prompting you for input.
+
+It will also configure the reicast-latest-tinker patch module to pull a specific version 
+of reicast from the main reicast repository when installing.
+
+The entire install will be automated after you kick off the install script.
+
 # Create your own distributable image
 
 The `tools/squash_sd_img.sh` script can be used to shrink the filesystem on you SDCard to its minimal size,
@@ -388,23 +425,7 @@ to its maximum size upon boot.  After the filesystem is expanded again the servi
 
 ```
 
-## Reproduce the current release
 
-`tools/reproduce_cur_release.sh` can be used to build an identical Armbian image and installer tarball as used
-in the current release/state of this repository.
-
-The Armbian OS installer tag is pinned to the last tested version, as well as the kernel tag.
-
-An **installer.cfg** file is written into the packaged installer tarball that will cause
-the installer to clone a specific version of RetroPie-Setup.
-
-**installer.cfg** will tell the installer to build RetroPie's "basic install", "xpad", and "reicast-latest-tinker"
-by default without prompting you for input.
-
-It will also configure the reicast-latest-tinker patch module to pull a specific version 
-of reicast from the main reicast repository when installing.
-
-The entire install will be automated after you kick off the install script.
 
 
 
