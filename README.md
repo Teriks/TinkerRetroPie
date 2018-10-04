@@ -37,7 +37,7 @@ The TinkerRetroPie install builder is currently tested and developed on Ubuntu 1
     * [Automate TinkerRetroPie basic install + extra modules](#automate-tinkerretropie-basic-install--extra-modules)
     * [Forcing Armbian source update + rebuild](#forcing-armbian-source-update--rebuild)
     * [Build Armbian without prompts](#build-armbian-without-prompts)
-    * [Reproduce the current release](#reproduce-the-current-release)
+    * [Build the current release](#build-the-current-release)
   * [Create your own distributable image](#create-your-own-distributable-image)
 
 # Features
@@ -373,7 +373,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 ```
 
-## Reproduce the current release
+## Build the current release
 
 `tools/reproduce_cur_release.sh` can be used to build an identical Armbian image and installer tarball as used
 in the current release/state of this repository.
