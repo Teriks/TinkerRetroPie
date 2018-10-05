@@ -31,6 +31,12 @@ function sources_reicast-latest-tinker() {
 }
 
 function build_reicast-latest-tinker() {
+    # Stop SDL input from being initialized
+    # it conflicts with evdev input and causes
+    # weird input glitches
+
+    sed -i 's|input_sdl_init();||' core/linux-dist/main.cpp
+
     cd shell/linux
     make platform=tinker-kms clean
     make platform=tinker-kms
