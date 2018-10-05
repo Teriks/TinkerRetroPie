@@ -35,7 +35,7 @@ function build_reicast-latest-tinker() {
     # it conflicts with evdev input and causes
     # weird input glitches
 
-    sed -i 's|input_sdl_init();||' core/linux-dist/main.cpp
+    sed -i 's|input_sdl_init();||; s|input_sdl_handle(port);||' core/linux-dist/main.cpp
 
     cd shell/linux
     make platform=tinker-kms clean
