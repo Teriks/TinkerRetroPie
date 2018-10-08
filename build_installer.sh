@@ -183,7 +183,7 @@ compile_armbian() {
     ./compile.sh docker KERNEL_CONFIGURE=$KERNEL_CONFIGURE KERNEL_ONLY=no \
         BUILD_DESKTOP=no BOARD=tinkerboard \
         RELEASE=stretch BRANCH=next LIB_TAG=$LIB_TAG \
-        BSPFREEZE=yes CLEAN_LEVEL="cache"
+        BSPFREEZE=yes CLEAN_LEVEL="$CLEAN_LEVEL"
     COMPILE_STATUS=$?
 
     popd
