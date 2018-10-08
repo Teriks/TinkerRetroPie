@@ -1,4 +1,39 @@
-439,446c439
+385a386,414
+> function autoIniResolution(){
+>     local res=($(fbset | sed --silent '2s|.*"\([[:digit:]]\+\)x\([[:digit:]]\+\).*|\1 \2|p'))
+>     local res_x=${res[0]}
+>     local res_y=${res[1]}
+> 
+>     iniConfig " = " "" "$config"
+> 
+>     if ! grep -q "\[Video-General\]" "$config"; then
+>         echo "[Video-General]" >> "$config"
+>     fi
+> 
+>     iniSet "ScreenWidth" $res_x
+>     iniSet "ScreenHeight" $res_y
+> 
+>     local gles2n64conf="$configdir/n64/gles2n64.conf"
+> 
+>     if [ -e "$gles2n64conf" ]; then
+> 
+>         iniConfig "=" "" "$gles2n64conf"
+> 
+>         if ! grep -q "#Window Settings:" "$gles2n64conf"; then
+>            echo "#Window Settings:" >> "$gles2n64conf"
+>         fi
+> 
+>         iniSet "window width" $res_x
+>         iniSet "window height" $res_y
+>     fi
+> }
+> 
+431a461,462
+> 
+> 
+437a469
+> getAutoConf mupen64plus_auto_ini_resolution && autoIniResolution
+439,446c471
 < if [[ "$(sed -n '/^Hardware/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo)" == BCM* ]]; then
 <     # If a raspberry pi is used lower resolution to 320x240 and enable SDL dispmanx scaling mode 1
 <     SDL_VIDEO_RPI_SCALE_MODE=1 "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --windowed $RES --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio ${AUDIO_PLUGIN}.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"

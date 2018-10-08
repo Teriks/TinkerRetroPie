@@ -183,6 +183,7 @@ function configure_mupen64plus() {
     addAutoConf mupen64plus_audio 1
     addAutoConf mupen64plus_hotkeys 1
     addAutoConf mupen64plus_texture_packs 1
+    addAutoConf mupen64plus_auto_ini_resolution 1
 
     chown -R $user:$user "$md_conf_root/n64"
 }

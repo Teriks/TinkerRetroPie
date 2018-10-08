@@ -10,4 +10,3 @@ SCRIPTPATH="$(
                                     KERNELBRANCH=tag:v4.14.71 \
                                     LIB_TAG=c1530db \
                                     TINKER_RETROPIE_CONFIG="$SCRIPTPATH/cur_installer.cfg"
-                                   
