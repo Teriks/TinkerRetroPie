@@ -155,6 +155,7 @@ compile_armbian() {
         set -e
         if ! [ -z "$LIB_TAG" ]; then
             pushd "$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME"
+                git pull origin master
                 git checkout $LIB_TAG
             popd
         fi
@@ -189,7 +190,7 @@ compile_armbian() {
 
     ./compile.sh docker KERNEL_CONFIGURE=$KERNEL_CONFIGURE KERNEL_ONLY=no \
         BUILD_DESKTOP=no BOARD=tinkerboard \
-        RELEASE=stretch BRANCH=next LIB_TAG=$LIB_TAG BSPFREEZE=yes
+        RELEASE=stretch BRANCH=next LIB_TAG=$LIB_TAG BSPFREEZE=yes CLEAN_LEVEL="cache"
     COMPILE_STATUS=$?
 
     popd
