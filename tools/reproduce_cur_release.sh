@@ -8,6 +8,6 @@ SCRIPTPATH="$(
 "$SCRIPTPATH/../build_installer.sh" BUILD_ARMBIAN=yes \
                                     KERNEL_CONFIGURE=no \
                                     KERNELBRANCH=tag:v4.14.74 \
-                                    LIB_TAG=b971c3f \
+                                    LIB_TAG=53acd5b \
                                     TINKER_RETROPIE_CONFIG="$SCRIPTPATH/cur_installer.cfg"
                                     
