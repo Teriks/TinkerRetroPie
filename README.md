@@ -2,11 +2,21 @@
 
 TinkerRetroPie is an Armbian OS build wrapper and RetroPie install script generator for ASUS Tinker Boards.
 
+The TinkerRetroPie install builder is currently tested and developed on Ubuntu 18.04.1 LTS.
+
+## Release Images
+
 See the [Releases](https://github.com/Teriks/TinkerRetroPie/releases) page for the current release images.
 
 A bare image, an image with RetroPie preinstalled, and the current installer tarball is attached to each release.
 
-All release images with RetroPie installed will have the following credentials:
+**Note:** Make sure to unzip the provided image files before flashing them.
+
+**Armbian_5.60_Tinkerboard_Debian_stretch_next_4.14.X.img.zip** contains the bare customized Armbian OS image with no RetroPie installed.
+
+**Armbian_5.60_Tinkerboard_Debian_stretch_next_4.14.X_TinkerRetroPie_vX.Y.Z.img.zip** contains the customized Armbian OS image with RetroPie already installed for you.
+
+Release images with RetroPie installed will have the following credentials:
 
 ```bash
 # tinker is the user RetroPie is installed under.
@@ -19,7 +29,17 @@ Password: 1234
 
 ```
 
-The TinkerRetroPie install builder is currently tested and developed on Ubuntu 18.04.1 LTS.
+**TinkerRetroPieInstaller.tar.gz** is the installer tarball that can be used to install RetroPie on the bare image if you want to do it yourself.
+
+```bash
+
+tar -xvf TinkerRetroPieInstaller.tar.gz
+
+# The install script is entirely automated, no RetroPie prompts will occur.
+
+sudo ./TinkerRetroPieInstaller/install.sh
+
+```
 
 ## TOC
 
