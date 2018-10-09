@@ -41,6 +41,14 @@ sudo ./TinkerRetroPieInstaller/install.sh
 
 ```
 
+Once installed, you can start emulationstation with:
+
+```
+
+emulationstation
+
+```
+
 ## TOC
 
   * [Features](#features)
