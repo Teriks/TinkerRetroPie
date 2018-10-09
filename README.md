@@ -26,15 +26,12 @@ The TinkerRetroPie install builder is currently tested and developed on Ubuntu 1
   * [Features](#features)
   * [Performance](#performance)
     * [Tested games](#tested-games)
-  * [Manual mupen64plus screen size fixes](#manual-mupen64plus-screen-size-fixes)
-    * [gles2n64 fix](#gles2n64-fix)
-    * [GLideN64, gles2rice, and glide64 fix](#gliden64-gles2rice-and-glide64-fix)
   * [Starting emulationstation](#starting-emulationstation)
   * [Update RetroPie / Install more software](#update-retropie--install-more-software)
   * [Build from source / Install yourself](#build-from-source--install-yourself)
     * [Build the latest everything](#build-the-latest-everything)
     * [Install xpad / xboxdrv](#install-xpad--xboxdrv)
-    * [Automate TinkerRetroPie basic install + extra modules](#automate-tinkerretropie-basic-install--extra-modules)
+    * [Automate basic install + extra modules](#automate-tinkerretropie-basic-install--extra-modules)
     * [Forcing Armbian source update + rebuild](#forcing-armbian-source-update--rebuild)
     * [Build Armbian without prompts](#build-armbian-without-prompts)
     * [Build the current release](#build-the-current-release)
@@ -113,63 +110,6 @@ Games I have tested on N64 with similar result:
 PS1: TODO. 
 
 I imagine it works great given it already works pretty well on Raspberry Pi 3, and Tinker has around twice the horsepower.
-
-
-# Manual mupen64plus screen size fixes
-
-If your going to use the full version of Mupen instead of the default `lr-mupen64plus` emulator,
-you will need to manually fix the screen resolution in two config files so that all of the packaged
-video plugins work correctly. If you do not set the proper resolution in these files, the screen will
-be rendered tiny in the bottom left corner of your display until you do.
-
-## gles2n64 fix
-
-The gles2n64 video plugin will need to have its window size manually adjusted since it currently
-cannot be determined automatically.
-
-Run Mupen with the gles2n64 video plugin once with a compatible ROM to generate a default config (the screen will be tiny), close RetroPie and then edit `/opt/retropie/configs/n64/gles2n64.conf`. Manually set the correct window size for your display.
-
-Make sure you run a ROM that is not affected by the start scripts ROM compatibility check so that the default config file is actually generated. I chose `Super Mario 64` since it actually starts up using the `gles2n64` video plugin and does not automatically divert to using `GLideN64` or something else.
-
-
-```bash
-
-nano /opt/retropie/configs/n64/gles2n64.conf
-
-```
-
-Change:
-
-```bash
-
-#Window Settings:
-window width=(your monitor screen width)
-window height=(your monitor screen height)
-
-```
-
-## GLideN64, gles2rice, and glide64 fix
-
-This one configuration change will fix the output resolution of all three mupen64plus plugins mentioned above.
-
-Open: `/opt/retropie/configs/n64/mupen64plus.cfg`
-
-```bash
-
-nano /opt/retropie/configs/n64/mupen64plus.cfg
-
-```
-
-Scroll down to the `[Video-General]` section, and edit or add:
-
-```
-ScreenWidth = (your monitor screen width)
-ScreenHeight = (your monitor screen height)
-```
-
-*Tip:* you can search in nano by pressing CTRL+W
-
-After you have set these to the correct values, all three plugins will display video properly.
 
 
 # Starting emulationstation
@@ -266,7 +206,7 @@ To load the newly installed kernel module.
 
 You will need to do some research on configuring controllers with RetroPie, it is generally a pain.
 
-## Automate TinkerRetroPie basic install + extra modules
+## Automate basic install + extra modules
 
 See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
 
