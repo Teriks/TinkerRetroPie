@@ -350,10 +350,24 @@ the installer to clone a specific version of RetroPie-Setup.
 **installer.cfg** will tell the installer to build RetroPie's "basic install", "xpad", and "reicast-latest-tinker"
 by default without prompting you for input.
 
-It will also configure the reicast-latest-tinker patch module to pull a specific version 
-of reicast from the main reicast repository when installing.
+It will also configure the TinkerRetroPie patch modules to build their emulators at tested commits.
 
 The entire install will be automated after you kick off the install script.
+
+You should first checkout a release before running:
+
+```bash
+
+# Checkout version vX.Y.Z ...
+
+git checkout vX.Y.Z
+
+# Build this version
+
+./tools/reproduce_cur_release.sh
+
+
+```
 
 # Create your own distributable image
 
