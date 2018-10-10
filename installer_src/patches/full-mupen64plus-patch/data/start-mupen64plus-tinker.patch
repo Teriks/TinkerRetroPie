@@ -4,7 +4,7 @@
 >     local res_x=${res[0]}
 >     local res_y=${res[1]}
 > 
->     if [ "$VIDEO_PLUGIN" = "mupen64plus-video-gles2n64" ]; then
+>     if [ "$VIDEO_PLUGIN" = "mupen64plus-video-n64" ]; then
 > 
 >         local gles2n64conf="$configdir/n64/gles2n64.conf"
 >         local gles2n64conf_default="$rootdir/emulators/mupen64plus/share/mupen64plus/gles2n64.conf"
