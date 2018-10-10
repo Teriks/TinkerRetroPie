@@ -1,47 +1,64 @@
-385a386,422
+385a386,439
 > function autoIniResolution(){
 >     local res=($(fbset | sed --silent '2s|.*"\([[:digit:]]\+\)x\([[:digit:]]\+\).*|\1 \2|p'))
 >     local res_x=${res[0]}
 >     local res_y=${res[1]}
 > 
->     iniConfig " = " "" "$config"
+>     if [ "$VIDEO_PLUGIN" = "mupen64plus-video-gles2n64" ]; then
 > 
->     if ! grep -q "\[Video-General\]" "$config"; then
->         # Missing Section
+>         local gles2n64conf="$configdir/n64/gles2n64.conf"
+>         local gles2n64conf_default="$rootdir/emulators/mupen64plus/share/mupen64plus/gles2n64.conf"
 > 
->         echo "[Video-General]" >> "$config"
->         echo "ScreenWidth=$res_x" >> "$config"
->         echo "ScreenHeight=$res_y" >> "$config"
->     else
->         if ! grep -q "ScreenWidth" "$config"; then
->             # First start
+>         iniConfig "=" "" "$gles2n64conf"
 > 
->             local v_line=$(grep -nr '\[Video-General\]' "$config" | cut -d : -f1)
->             sed -i "$(($v_line+1))i ScreenWidth=$res_x\nScreenHeight=$res_y" "$config"
+>         if [ -e "$gles2n64conf" ]; then
+> 
+>             if ! grep -q "config version" "$gles2n64conf"; then
+>                # empty config?
+> 
+>                cp "$gles2n64conf_default" "$gles2n64conf"
+>             fi
+> 
 >         else
+>             cp "$gles2n64conf_default" "$gles2n64conf"
+>         fi
 > 
->             iniSet "ScreenWidth" $res_x
->             iniSet "ScreenHeight" $res_y
+>         iniSet "window width" $res_x
+>         iniSet "window height" $res_y
+> 
+>     else
+> 
+>         iniConfig " = " "" "$config"
+> 
+>         if ! grep -q "\[Video-General\]" "$config"; then
+>             # Missing Section
+> 
+>             echo "[Video-General]" >> "$config"
+>             echo "ScreenWidth=$res_x" >> "$config"
+>             echo "ScreenHeight=$res_y" >> "$config"
+>         else
+>             if ! grep -q "ScreenWidth" "$config"; then
+>                 # First start
+> 
+>                 local v_line=$(grep -nr '\[Video-General\]' "$config" | cut -d : -f1)
+> 
+>                 # Insert under Video-General
+>                 sed -i "$(($v_line+1))i ScreenWidth=$res_x\nScreenHeight=$res_y" "$config"
+>             else
+> 
+>                 iniSet "ScreenWidth" $res_x
+>                 iniSet "ScreenHeight" $res_y
+>             fi
 >         fi
 >     fi
-> 
->     # This file was installed by the install
->     # script from the gles2n64 repo
-> 
->     local gles2n64conf="$configdir/n64/gles2n64.conf"
-> 
->     iniConfig "=" "" "$gles2n64conf"
-> 
->     iniSet "window width" $res_x
->     iniSet "window height" $res_y
 > }
 > 
-431a469,470
+431a486,487
 > 
 > 
-437a477
+437a494
 > getAutoConf mupen64plus_auto_ini_resolution && autoIniResolution
-439,446c479
+439,446c496
 < if [[ "$(sed -n '/^Hardware/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo)" == BCM* ]]; then
 <     # If a raspberry pi is used lower resolution to 320x240 and enable SDL dispmanx scaling mode 1
 <     SDL_VIDEO_RPI_SCALE_MODE=1 "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --windowed $RES --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio ${AUDIO_PLUGIN}.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"

@@ -132,10 +132,7 @@ function configure_mupen64plus() {
     # Copy config files
     cp -v "$md_inst/share/mupen64plus/"{*.ini,font.ttf} "$md_conf_root/n64/"
 
-    # Required for gles2n64 auto window size on tinker.
-    cp -v "$md_inst/share/mupen64plus/gles2n64.conf" "$md_conf_root/n64/"
-    
-    # isPlatform "rpi" && cp -v "$md_inst/share/mupen64plus/"*.conf "$md_conf_root/n64/"
+    cp -v "$md_inst/share/mupen64plus/"*.conf "$md_conf_root/n64/"
 
     local config="$md_conf_root/n64/mupen64plus.cfg"
     local cmd="$md_inst/bin/mupen64plus --configdir $md_conf_root/n64 --datadir $md_conf_root/n64"
