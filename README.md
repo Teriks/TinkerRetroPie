@@ -361,7 +361,7 @@ See `CLEAN_LEVEL`: https://docs.armbian.com/Developer-Guide_Build-Options/
 
 ## Build the current release
 
-`tools/reproduce_cur_release.sh` can be used to build an identical Armbian image and installer tarball as used
+`tools/build_release.sh` can be used to build an identical Armbian image and installer tarball as used
 in the current release/state of this repository.
 
 The Armbian OS installer tag is pinned to the last tested version, as well as the kernel tag.
@@ -386,7 +386,7 @@ git checkout vX.Y.Z
 
 # Build this version
 
-./tools/reproduce_cur_release.sh
+./tools/build_release.sh
 
 
 ```
