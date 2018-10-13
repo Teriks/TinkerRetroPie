@@ -214,7 +214,7 @@ compile_armbian() {
          s/CONFIG_INPUT_EVDEV=y/CONFIG_INPUT_EVDEV=m/' \
         ./config/kernel/linux-rockchip-next.config >./userpatches/linux-rockchip-next.config
 
-    ./compile.sh ${BUILD_CONTAINER:-docker} KERNEL_CONFIGURE=$KERNEL_CONFIGURE \
+    ./compile.sh $BUILD_CONTAINER KERNEL_CONFIGURE=$KERNEL_CONFIGURE \
         KERNEL_ONLY=no BUILD_DESKTOP=no BOARD=tinkerboard \
         RELEASE=stretch BRANCH=$BRANCH LIB_TAG=$LIB_TAG \
         BSPFREEZE=yes CLEAN_LEVEL="$CLEAN_LEVEL"

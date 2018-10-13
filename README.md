@@ -347,6 +347,8 @@ The above is not recommended and is for making debugging build issues easier, yo
 just start up a VM running Ubuntu 18.04 LTS and do the build in there with this option set 
 to null.
 
+The default value is `BUILD_CONTAINER="docker"`.
+
 You can also use vagrant instead by setting `BUILD_CONTAINER="vagrant"` (Not Tested)
 
 
