@@ -56,8 +56,8 @@ For starting emulationstation, see section: [Starting emulationstation](#startin
     * [Automate basic install + extra modules](#automate-tinkerretropie-basic-install--extra-modules)
     * [Forcing Armbian source update + rebuild](#forcing-armbian-source-update--rebuild)
     * [Build Armbian without prompts](#build-armbian-without-prompts)
-      * [Build Container Selection](#build-container-selection)
-      * [Build Clean Level](#build-clean-level)
+      * [Build container selection](#build-container-selection)
+      * [Build clean level](#build-clean-level)
     * [Build the current release](#build-the-current-release)
   * [Create your own distributable image](#create-your-own-distributable-image)
 
@@ -339,7 +339,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 ```
 
-### Build Container Selection
+### Build container selection
 
 You can force the build to occur on your actual machine by setting `BUILD_CONTAINER=""`.
 
@@ -352,7 +352,7 @@ The default value is `BUILD_CONTAINER="docker"`.
 You can also use vagrant instead by setting `BUILD_CONTAINER="vagrant"` (Not Tested)
 
 
-### Build Clean Level
+### Build clean level
 
 Build clean level can be adjusted using `CLEAN_LEVEL="..."`
 
