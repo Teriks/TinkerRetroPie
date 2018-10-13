@@ -49,6 +49,8 @@ fi
 
 source "$INSTALLER_DIR/lib/read_params.sh"
 
+BUILD_CONTAINER=${BUILD_CONTAINER:-docker}
+
 OUTPUT_DIR=${OUTPUT_DIR:-"$SCRIPTPATH/output"}
 
 DEFAULT_ARMBIAN_BUILD_DIR_NAME='armbian_build'
@@ -71,13 +73,15 @@ popd() {
 
 # 1 parameter, the default if no input
 ask_yes_no() {
-    while [[ "$ANSWER" != y* && "$ANSWER" != n* ]]; do
-        read -e -p "(y)es / (n)o: " -i "${1,,}" ANSWER
-        ANSWER=${ANSWER:-$1}
-        ANSWER="${ANSWER,,}"
+    local answer
+
+    while [[ "$answer" != y* && "$answer" != n* ]]; do
+        read -e -p "(y)es / (n)o: " -i "${1,,}" answer
+        answer=${answer:-$1}
+        answer="${answer,,}"
     done
  
-    if [[ $ANSWER == y* ]]; then
+    if [[ $answer == y* ]]; then
         echo "yes"
     else
         echo "no"
@@ -85,11 +89,12 @@ ask_yes_no() {
 }
 
 check_val_yes_no() {
-    ARG=${1,,}
-    if [[ $ARG -eq 1 || "$ARG" == y* ]]; then
+    local arg=${1,,}
+
+    if [[ $arg -eq 1 || "$arg" == y* ]]; then
         echo $2
         return 0
-    elif [[ $ARG -eq 0 || "$ARG" == n* ]]; then
+    elif [[ $arg -eq 0 || "$arg" == n* ]]; then
         echo $3
         return 0
     else
@@ -108,10 +113,13 @@ armbian_images_exist() {
 }
 
 compile_armbian() {
-    if [ $(dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-        echo "You do not have docker installed, install docker and try again. Exiting."
-        echo "See: https://docs.docker.com/install/"
-        exit 1
+
+    if [ "$BUILD_CONTAINER" == "docker" ]; then
+        if [ $(dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+            echo "You do not have docker installed, install docker and try again. Exiting."
+            echo "See: https://docs.docker.com/install/"
+            exit 1
+        fi
     fi
  
     if [ -z "$LIB_TAG" ]; then
@@ -151,6 +159,32 @@ compile_armbian() {
         fi
     fi
 
+    if [ -z "$BRANCH" ]; then
+
+        local kernel_ver=$(echo "$KERNELBRANCH" | sed -n 's|\([^0-9]\+\)\(.*\)|\2|p')
+        local kernel_maj=$(echo "$kernel_ver" | cut -d'.' -f1)
+        local kernel_min=$(echo "$kernel_ver" | cut -d'.' -f2)
+
+        if [ "$kernel_maj" -eq 4 ]; then
+            if [ "$kernel_min" -gt 14 ]; then
+                BRANCH=dev
+            elif [ "$kernel_min" -gt 4 ]; then
+                BRANCH=next
+            else
+                BRANCH=default
+            fi
+        else
+            echo "===================="
+            echo "Build Failed: Unable to build a non major version 4 kernel!"
+            exit 1
+        fi
+        
+        echo "===================="
+        echo "Kernel Version - Maj: $kernel_maj, Min: $kernel_min"
+        echo "Selected Armbian Branch: $BRANCH, according to Kernel Branch: $KERNELBRANCH"
+        echo "===================="
+    fi
+
     if [ -d "$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME" ]; then
         set -e
         if ! [ -z "$LIB_TAG" ]; then
@@ -180,15 +214,16 @@ compile_armbian() {
          s/CONFIG_INPUT_EVDEV=y/CONFIG_INPUT_EVDEV=m/' \
         ./config/kernel/linux-rockchip-next.config >./userpatches/linux-rockchip-next.config
 
-    ./compile.sh docker KERNEL_CONFIGURE=$KERNEL_CONFIGURE KERNEL_ONLY=no \
-        BUILD_DESKTOP=no BOARD=tinkerboard \
-        RELEASE=stretch BRANCH=next LIB_TAG=$LIB_TAG \
+    ./compile.sh ${BUILD_CONTAINER:-docker} KERNEL_CONFIGURE=$KERNEL_CONFIGURE \
+        KERNEL_ONLY=no BUILD_DESKTOP=no BOARD=tinkerboard \
+        RELEASE=stretch BRANCH=$BRANCH LIB_TAG=$LIB_TAG \
         BSPFREEZE=yes CLEAN_LEVEL="$CLEAN_LEVEL"
-    COMPILE_STATUS=$?
+
+    local compile_status=$?
 
     popd
 
-    if [[ $(armbian_images_exist) -eq 0 || $COMPILE_STATUS -ne 0 ]]; then
+    if [[ $(armbian_images_exist) -eq 0 || $compile_status -ne 0 ]]; then
         exit 1
     fi
 }
@@ -197,15 +232,16 @@ main() {
 
     if [[ $(armbian_images_exist) -eq 0 || $FORCE_BUILD_ARMBIAN -eq 1 ]]; then
 
-        CLONE_OR_UPDATE="clone"
+        local clone_or_update="clone"
+
         if [ -d "$ARMBIAN_BUILD_PATH" ]; then
-            CLONE_OR_UPDATE="update"
+            clone_or_update="update"
         fi
 
         if [ -z "$BUILD_ARMBIAN" ]; then
 
             echo "===================="
-            echo "Would you like to $CLONE_OR_UPDATE the Armbian-build repo and build Armbian?"
+            echo "Would you like to $clone_or_update the Armbian-build repo and build Armbian?"
             echo "This script will automaticly enable Mali Midgard devfreq kernel support."
             echo "The build requires docker be installed."
             echo "===================="
@@ -231,43 +267,45 @@ main() {
             echo "Please specify the full path to your completed Armbian build."
             echo "===================="
 
-            FOUND_VALID_ARMBIAN_BUILD=0
+            local found_valid_armbian_build=0
 
-            while [ $FOUND_VALID_ARMBIAN_BUILD -eq 0 ]; do
+            while [ $found_valid_armbian_build -eq 0 ]; do
 
-                read -e -p 'Armbian build repo path: ' -i "$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME" USER_BUILD_PATH
+                local user_build_path
+
+                read -e -p 'Armbian build repo path: ' -i "$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME" user_build_path
                 echo ""
-                USER_BUILD_PATH=${USER_BUILD_PATH:-"$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME"}
+                user_build_path=${user_build_path:-"$SCRIPTPATH/$DEFAULT_ARMBIAN_BUILD_DIR_NAME"}
 
-                IMAGES_DIR_STRUCT="$ARMBIAN_OUTPUT_DIR_NAME/$ARMBIAN_OUTPUT_IMAGES_DIR_NAME"
-                DEBS_DIR_STRUCT="$ARMBIAN_OUTPUT_DIR_NAME/$ARMBIAN_OUTPUT_DEBS_DIR_NAME"
+                local images_dir_struct="$ARMBIAN_OUTPUT_DIR_NAME/$ARMBIAN_OUTPUT_IMAGES_DIR_NAME"
+                local debs_dir_struct="$ARMBIAN_OUTPUT_DIR_NAME/$ARMBIAN_OUTPUT_DEBS_DIR_NAME"
 
-                USER_IMAGES_DIR="$USER_BUILD_PATH/$IMAGES_DIR_STRUCT"
-                USER_DEBS_DIR="$USER_BUILD_PATH/$DEBS_DIR_STRUCT"
+                local user_images_dir="$user_build_path/$images_dir_struct"
+                local user_debs_dir="$user_build_path/$debs_dir_struct"
 
-                if ! [ -d "$USER_IMAGES_DIR" ]; then
+                if ! [ -d "$user_images_dir" ]; then
                     echo "===================="
-                    echo "\"$USER_BUILD_PATH\" does not contain an \"$IMAGES_DIR_STRUCT\" folder."
+                    echo "\"$user_build_path\" does not contain an \"$images_dir_struct\" folder."
                     echo "Build Armbian first or try another path."
                     echo "===================="
-                elif ! [ -d "$USER_DEBS_DIR" ]; then
+                elif ! [ -d "$user_debs_dir" ]; then
                     echo "===================="
-                    echo "\"$USER_BUILD_PATH\" does not contain an \"$DEBS_DIR_STRUCT\" folder."
+                    echo "\"$user_build_path\" does not contain an \"$debs_dir_struct\" folder."
                     echo "Build Armbian first or try another path."
                     echo "===================="
                 else
-                    ARMBIAN_BUILD_PATH=$(realpath "$USER_BUILD_PATH")
+                    ARMBIAN_BUILD_PATH=$(realpath "$user_build_path")
                     ARMBIAN_OUTPUT_PATH="$ARMBIAN_BUILD_PATH/$ARMBIAN_OUTPUT_DIR_NAME"
                     ARMBIAN_OUTPUT_IMAGES_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_IMAGES_DIR_NAME"
                     ARMBIAN_OUTPUT_DEBS_DIR="$ARMBIAN_OUTPUT_PATH/$ARMBIAN_OUTPUT_DEBS_DIR_NAME"
 
                     if [ $(armbian_images_exist) -eq 0 ]; then
                         echo "===================="
-                        echo "\"$USER_BUILD_PATH/$IMAGES_DIR_STRUCT\" does not contain any built Armbian images."
+                        echo "\"$user_build_path/$images_dir_struct\" does not contain any built Armbian images."
                         echo "Build Armbian first or try another path."
                         echo "===================="
                     else
-                        FOUND_VALID_ARMBIAN_BUILD=1
+                        found_valid_armbian_build=1
                         echo "===================="
                         echo "Found Armbian build at: \"$ARMBIAN_BUILD_PATH\""
                         echo "===================="

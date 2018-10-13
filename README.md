@@ -56,6 +56,8 @@ For starting emulationstation, see section: [Starting emulationstation](#startin
     * [Automate basic install + extra modules](#automate-tinkerretropie-basic-install--extra-modules)
     * [Forcing Armbian source update + rebuild](#forcing-armbian-source-update--rebuild)
     * [Build Armbian without prompts](#build-armbian-without-prompts)
+      * [Build Container Selection](#build-container-selection)
+      * [Build Clean Level](#build-clean-level)
     * [Build the current release](#build-the-current-release)
   * [Create your own distributable image](#create-your-own-distributable-image)
 
@@ -336,6 +338,24 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
                      OUTPUT_DIR=./my_custom_output_dir
 
 ```
+
+### Build Container Selection
+
+You can force the build to occur on your actual machine by setting `BUILD_CONTAINER=""`.
+
+The above is not recommended and is for making debugging build issues easier, you can also
+just start up a VM running Ubuntu 18.04 LTS and do the build in there with this option set 
+to null.
+
+You can also use vagrant instead by setting `BUILD_CONTAINER="vagrant"` (Not Tested)
+
+
+### Build Clean Level
+
+Build clean level can be adjusted using `CLEAN_LEVEL="..."`
+
+See `CLEAN_LEVEL`: https://docs.armbian.com/Developer-Guide_Build-Options/
+
 
 ## Build the current release
 

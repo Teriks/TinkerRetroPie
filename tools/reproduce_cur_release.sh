@@ -9,5 +9,5 @@ SCRIPTPATH="$(
                                     KERNEL_CONFIGURE=no \
                                     KERNELBRANCH=tag:v4.14.74 \
                                     LIB_TAG=53acd5b \
+                                    BUILD_CONTAINER=docker \
                                     TINKER_RETROPIE_CONFIG="$SCRIPTPATH/cur_installer.cfg"
-                                    
