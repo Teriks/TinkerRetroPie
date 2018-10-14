@@ -153,6 +153,12 @@ popd() {
 
     apt-get install -y pulseaudio pulseaudio-utils || exit 1
 
+    echo "======================="
+    echo "Installing bluetooth..."
+    echo "======================="
+
+    apt-get install -y bluetooth || exit 1
+
     echo "======================================"
     echo "Creating GLESv1 shared object symlinks"
     echo "======================================"
