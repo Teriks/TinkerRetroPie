@@ -56,6 +56,7 @@ For starting emulationstation, see section: [Starting emulationstation](#startin
     * [Automate basic install + extra modules](#automate-tinkerretropie-basic-install--extra-modules)
     * [Forcing Armbian source update + rebuild](#forcing-armbian-source-update--rebuild)
     * [Build Armbian without prompts](#build-armbian-without-prompts)
+      * [Override U-Boot version](#override-u-boot-version)
       * [Build container selection](#build-container-selection)
       * [Build clean level](#build-clean-level)
     * [Build the current release](#build-the-current-release)
@@ -338,6 +339,26 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
                      OUTPUT_DIR=./my_custom_output_dir
 
 ```
+
+### Override U-Boot version
+
+You can override the version of U-Boot to compile with `BOOTBRANCH`.
+
+e.g:
+
+```bash
+
+# Build from a tag
+
+./build_installer.sh BOOTBRANCH="tag:v2018.11-rc1"
+
+# Use latest
+
+./build_installer.sh BOOTBRANCH="branch:master"
+
+```
+
+This is normally selected automatically by the underlying Armbian build system.
 
 ### Build container selection
 

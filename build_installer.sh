@@ -205,6 +205,10 @@ compile_armbian() {
 
     echo "KERNELBRANCH='$KERNELBRANCH'" >./userpatches/lib.config
 
+    if ! [ -z "$BOOTBRANCH" ]; then
+        echo "BOOTBRANCH='$BOOTBRANCH'" >>./userpatches/lib.config
+    fi
+
     # Enable MALI devfreq support
     sed 's/# CONFIG_MALI_DEVFREQ is not set/CONFIG_MALI_DEVFREQ=y/
          s/CONFIG_JOYSTICK_XPAD=y/# CONFIG_JOYSTICK_XPAD is not set/
