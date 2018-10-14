@@ -112,6 +112,22 @@ armbian_images_exist() {
     fi
 }
 
+kconfig_file(){
+    _KCONFIG_FILE=$1
+}
+
+kconfig_set(){
+    local prop=$1
+    local value=$2
+
+    if grep -q "$prop" "$_KCONFIG_FILE"; then
+        sed -i "s/# ${prop} is not set/${prop}=${value}/
+                s/${prop}=[ynm]/${prop}=${value}/" "$_KCONFIG_FILE"
+    else
+        echo "${prop}=${value}" >> "$_KCONFIG_FILE"
+    fi
+}
+
 compile_armbian() {
 
     if [ "$BUILD_CONTAINER" == "docker" ]; then
@@ -159,16 +175,18 @@ compile_armbian() {
         fi
     fi
 
+    local kernel_short_version=$(echo "$KERNELBRANCH" | sed -n 's|\([^0-9]\+\)\([0-9.]*\)\(-rc[0-9]\+\)\{0,1\}|\2|p')
+    local kernel_major=$(echo "$kernel_short_version" | cut -d'.' -f1)
+    local kernel_minor=$(echo "$kernel_short_version" | cut -d'.' -f2)
+
     if [ -z "$BRANCH" ]; then
 
-        local kernel_ver=$(echo "$KERNELBRANCH" | sed -n 's|\([^0-9]\+\)\([0-9.]*\)\(-rc[0-9]\+\)\{0,1\}|\2|p')
-        local kernel_maj=$(echo "$kernel_ver" | cut -d'.' -f1)
-        local kernel_min=$(echo "$kernel_ver" | cut -d'.' -f2)
 
-        if [ "$kernel_maj" -eq 4 ]; then
-            if [ "$kernel_min" -gt 14 ]; then
+
+        if [ "$kernel_major" -eq 4 ]; then
+            if [ "$kernel_minor" -gt 14 ]; then
                 BRANCH=dev
-            elif [ "$kernel_min" -gt 4 ]; then
+            elif [ "$kernel_minor" -gt 4 ]; then
                 BRANCH=next
             else
                 BRANCH=default
@@ -180,7 +198,7 @@ compile_armbian() {
         fi
         
         echo "===================="
-        echo "Kernel Version - Maj: $kernel_maj, Min: $kernel_min"
+        echo "Kernel Version - Maj: $kernel_major, Min: $kernel_minor"
         echo "Selected Armbian Branch: $BRANCH, according to Kernel Branch: $KERNELBRANCH"
         echo "===================="
     fi
@@ -209,14 +227,53 @@ compile_armbian() {
         echo "BOOTBRANCH='$BOOTBRANCH'" >>./userpatches/lib.config
     fi
 
+    local kernel_config_in="./config/kernel/linux-rockchip-${BRANCH}.config"
+    local kernel_config_out="./userpatches/linux-rockchip-${BRANCH}.config"
+
+    cp "$kernel_config_in" "$kernel_config_out"
+
+    # Set the kernel config file to edit
+
+    kconfig_file "$kernel_config_out"
+
     # Enable MALI devfreq support
-    sed 's/# CONFIG_MALI_DEVFREQ is not set/CONFIG_MALI_DEVFREQ=y/
-         s/CONFIG_JOYSTICK_XPAD=y/# CONFIG_JOYSTICK_XPAD is not set/
-         s/CONFIG_JOYSTICK_XPAD_FF=y/# CONFIG_JOYSTICK_XPAD_FF is not set/
-         s/CONFIG_JOYSTICK_XPAD_LEDS=y/# CONFIG_JOYSTICK_XPAD_LEDS is not set/
-         s/CONFIG_INPUT_JOYDEV=y/CONFIG_INPUT_JOYDEV=m/
-         s/CONFIG_INPUT_EVDEV=y/CONFIG_INPUT_EVDEV=m/' \
-         "./config/kernel/linux-rockchip-${BRANCH}.config" > "./userpatches/linux-rockchip-${BRANCH}.config"
+
+    kconfig_set "CONFIG_MALI_DEVFREQ" "y"
+    kconfig_set "CONFIG_JOYSTICK_XPAD" "n"
+    kconfig_set "CONFIG_JOYSTICK_XPAD_FF" "n"
+    kconfig_set "CONFIG_JOYSTICK_XPAD" "n"
+    kconfig_set "CONFIG_JOYSTICK_XPAD_LEDS" "n"
+    kconfig_set "CONFIG_INPUT_JOYDEV" "m"
+    kconfig_set "CONFIG_INPUT_EVDEV" "m"
+    
+    # Fix tinker bluetooth for next and dev kernels
+
+    if [ "$kernel_minor" -ge 14 ] && ! grep -q 'CONFIG_BT_HCIUART_3WIRE=y' "$kernel_config_out"; then
+
+        echo "===================="
+        echo "Enabling HCIUART_3WIRE (H5 Protocol) for kernel minor version >= 14"
+        echo "Needed for bluetooth support on tinker"
+        echo "===================="
+        
+        # Enable h5 protocol for bluetooth if not enabled
+
+        # Depends...
+
+        kconfig_set "CONFIG_SERIAL_DEV_BUS" "y"
+        kconfig_set "CONFIG_BT_HCIUART_SERDEV" "y"
+
+        # h5 support
+
+        kconfig_set "CONFIG_BT_HCIUART_3WIRE" "y"
+
+        # Extra stuff that its going to ask if you want...
+
+        kconfig_set "CONFIG_BT_HCIUART_NOKIA" "n"
+        kconfig_set "CONFIG_BT_HCIUART_LL" "n"
+        kconfig_set "CONFIG_BT_HCIUART_BCM" "n"
+        kconfig_set "CONFIG_QCA7000_UART" "n"
+        kconfig_set "CONFIG_SERIAL_DEV_CTRL_TTYPORT" "n"
+    fi
 
     ./compile.sh $BUILD_CONTAINER KERNEL_CONFIGURE=$KERNEL_CONFIGURE \
         KERNEL_ONLY=no BUILD_DESKTOP=no BOARD=tinkerboard \
