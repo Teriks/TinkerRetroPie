@@ -212,7 +212,7 @@ compile_armbian() {
          s/CONFIG_JOYSTICK_XPAD_LEDS=y/# CONFIG_JOYSTICK_XPAD_LEDS is not set/
          s/CONFIG_INPUT_JOYDEV=y/CONFIG_INPUT_JOYDEV=m/
          s/CONFIG_INPUT_EVDEV=y/CONFIG_INPUT_EVDEV=m/' \
-        ./config/kernel/linux-rockchip-next.config >./userpatches/linux-rockchip-next.config
+         "./config/kernel/linux-rockchip-${BRANCH}.config" > "./userpatches/linux-rockchip-${BRANCH}.config"
 
     ./compile.sh $BUILD_CONTAINER KERNEL_CONFIGURE=$KERNEL_CONFIGURE \
         KERNEL_ONLY=no BUILD_DESKTOP=no BOARD=tinkerboard \
