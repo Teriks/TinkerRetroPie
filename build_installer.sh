@@ -161,7 +161,7 @@ compile_armbian() {
 
     if [ -z "$BRANCH" ]; then
 
-        local kernel_ver=$(echo "$KERNELBRANCH" | sed -n 's|\([^0-9]\+\)\(.*\)|\2|p')
+        local kernel_ver=$(echo "$KERNELBRANCH" | sed -n 's|\([^0-9]\+\)\([0-9.]*\)\(-rc[0-9]\+\)\{0,1\}|\2|p')
         local kernel_maj=$(echo "$kernel_ver" | cut -d'.' -f1)
         local kernel_min=$(echo "$kernel_ver" | cut -d'.' -f2)
 
