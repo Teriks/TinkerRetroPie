@@ -12,9 +12,9 @@ A bare image, an image with RetroPie preinstalled, and the current installer tar
 
 **Note:** Make sure to unzip the provided image files before flashing them.
 
-**Armbian_5.60_Tinkerboard_Debian_stretch_next_4.14.X.img.zip** contains the bare customized Armbian OS image with no RetroPie installed.
+**Armbian_5.X_Tinkerboard_Debian_stretch_next_4.14.X.img.zip** contains the bare customized Armbian OS image with no RetroPie installed.
 
-**Armbian_5.60_Tinkerboard_Debian_stretch_next_4.14.X_TinkerRetroPie_vX.Y.Z.img.zip** contains the customized Armbian OS image with RetroPie already installed for you.
+**Armbian_5.X_Tinkerboard_Debian_stretch_next_4.14.X_TinkerRetroPie_vX.Y.Z.img.zip** contains the customized Armbian OS image with RetroPie already installed for you.
 
 Release images with RetroPie installed will have the following credentials:
 
