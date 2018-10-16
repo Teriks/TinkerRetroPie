@@ -211,7 +211,7 @@ This will bring up a blue menu where you can select "Basic Install".
 
 You can restart the RetroPie config script to install additional packages later or update software by running `sudo ~/RetroPie-Setup/retropie_setup.sh`
 
-Once installed, you can launch emulationstation, see the [Starting emulationstation](#starting-emulationstation) section..
+Once installed, you can launch emulationstation, see the [Starting emulationstation](#starting-emulationstation) section.
 
 ## Install xpad / xboxdrv
 
