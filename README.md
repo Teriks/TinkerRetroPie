@@ -328,7 +328,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 # 4.) Checkout Armbian/build repo at commit: c1530db (5.60)
 # 5.) Use the TinkerRetroPie installer config file at 'tools/cur_installer.cfg'
 #
-# 5.) Place the output image and installer tarball in ./my_custom_output_dir
+# 6.) Place the output image and installer tarball in ./my_custom_output_dir
 #     Creating the directory if it does not exist
 
 ./build_installer.sh BUILD_ARMBIAN=yes \
