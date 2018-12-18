@@ -96,7 +96,7 @@ A patch is applied to reicast which fixes major gamepad input bugs on this platf
 
 Working but moderately tested:
 
- * ppsspp-tinker (Contributed TinkerRetroPie patch, builds a full up-to-date version)
+ * ppsspp-tinker (Sony PSP Emu) (Contributed TinkerRetroPie patch, builds a full up-to-date version)
  
 
 # Performance
