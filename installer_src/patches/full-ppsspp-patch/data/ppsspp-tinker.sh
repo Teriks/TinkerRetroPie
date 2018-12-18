@@ -25,6 +25,7 @@ function sources_ppsspp-tinker() {
     gitPullOrClone "$md_build/ppsspp" https://github.com/hrydgard/ppsspp.git \
                                       "PPSSPP_TINKER_BRANCH" \
                                       "PPSSPP_TINKER_COMMIT"
+
     cd ppsspp
 
     # remove the lines that trigger the ffmpeg build script functions - we will just use the variables from it
@@ -97,10 +98,14 @@ function install_ppsspp-tinker() {
 function configure_ppsspp-tinker() {
     mkRomDir "psp"
 
+    # Copy startup script to install dir
+
+    cp "$md_data/ppsspp.sh" "$md_inst/"
+
     moveConfigDir "$home/.config/ppsspp" "$md_conf_root/psp"
     mkUserDir "$md_conf_root/psp/PSP"
     ln -snf "$romdir/psp" "$md_conf_root/psp/PSP/GAME"
 
-    addEmulator 1 "$md_id" "psp" "$md_inst/PPSSPPSDL --fullscreen %ROM%"
+    addEmulator 1 "$md_id" "psp" "$md_inst/ppsspp.sh %ROM%"
     addSystem "psp"
 }

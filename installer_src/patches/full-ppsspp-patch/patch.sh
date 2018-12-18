@@ -41,6 +41,7 @@ cp "$SCRIPTPATH/data/ppsspp-tinker.sh" "$MODULE_DEST"
 sed -i "s|PPSSPP_TINKER_BRANCH|$PPSSPP_TINKER_BRANCH|
         s|PPSSPP_TINKER_COMMIT|$PPSSPP_TINKER_COMMIT|" "$MODULE_DEST"
 
+cp "$SCRIPTPATH/data/ppsspp.sh" "$MODULE_DATA_DIR"
 cp "$SCRIPTPATH/data/tinkerboard.cmake" "$MODULE_DATA_DIR"
 
 set +x

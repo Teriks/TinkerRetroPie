@@ -7,7 +7,7 @@ SCRIPTPATH="$(
 
 "$SCRIPTPATH/../build_installer.sh" BUILD_ARMBIAN=yes \
                                     KERNEL_CONFIGURE=no \
-                                    KERNELBRANCH=tag:v4.18.14 \
-                                    LIB_TAG=1c4340b \
+                                    KERNELBRANCH=tag:v4.19.9 \
+                                    LIB_TAG=a37a9cf \
                                     BUILD_CONTAINER=docker \
                                     TINKER_RETROPIE_CONFIG="$SCRIPTPATH/installer.cfg"
