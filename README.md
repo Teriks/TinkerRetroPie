@@ -89,6 +89,7 @@ Adding a desktop environment is untested/unsupported due to the finickiness of t
 I have tested these emulators so far with good success:
 
  * reicast-latest-tinker (TinkerRetroPie patch, builds an up-to-date version)
+ * lr-pcsx-rearmed
  * lr-mupen64plus
  * mupen64plus (TinkerRetroPie patch, builds a full up-to-date version)
 
