@@ -88,10 +88,15 @@ Adding a desktop environment is untested/unsupported due to the finickiness of t
 
 I have tested these emulators so far with good success:
 
- * reicast (the provided one)
- * reicast-latest-tinker (TinkerRetroPie patch, installs the latest version)
+ * reicast-latest-tinker (TinkerRetroPie patch, builds an up-to-date version)
  * lr-mupen64plus
- * mupen64plus (TinkerRetroPie patch, builds the full version for tinker)
+ * mupen64plus (TinkerRetroPie patch, builds a full up-to-date version)
+
+A patch is applied to reicast which fixes major gamepad input bugs on this platform.
+
+Working but moderately tested:
+
+ * ppsspp-tinker (Contributed TinkerRetroPie patch, builds a full up-to-date version)
  
 
 # Performance
