@@ -144,7 +144,8 @@ Games I have tested on reicast running pretty much full or playable speed:
  * Dead Or Alive 2
  * Soul Calibur (A few graphical glitches, kinda slow)
  * Shenmue (A few graphical glitches, kinda slow, some audio skip)
- * Crazy Taxi 
+ * Crazy Taxi (Audio skips)
+ * Crazy Taxi 2 (Audio skips)
  * Sonic Adventures 2
  * Rayman 2: The Great Escape
  * Star Wars - Episode I - Racer
