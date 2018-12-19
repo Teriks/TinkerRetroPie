@@ -4,6 +4,8 @@ TinkerRetroPie is an Armbian OS build wrapper and RetroPie install script genera
 
 The TinkerRetroPie install builder is currently tested and developed on Ubuntu 18.04.1 LTS.
 
+The provided images are tested on a Tinker Board S.
+
 ## Release Images
 
 See the [Releases](https://github.com/Teriks/TinkerRetroPie/releases) page for the current release images.
