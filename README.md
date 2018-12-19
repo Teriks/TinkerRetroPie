@@ -150,6 +150,7 @@ Games I have tested on reicast running pretty much full or playable speed:
  * Rayman 2: The Great Escape
  * Star Wars - Episode I - Racer
  * GTA 2
+ * Gauntlet Legends
 
 Games I have tested on N64 with similar result:
 
