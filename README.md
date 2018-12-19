@@ -126,10 +126,17 @@ Note: lr-mupen64plus runs a little bit faster at the moment than the full versio
 
 Games I have tested on reicast running pretty much full or playable speed: 
 
+ * Re-Volt
+ * Prince Of Persia - Arabian Nights
+ * Test Drive 6 (Kinda slow)
+ * Test Drive - V Rally (A few graphical glitches, kinda slow)
  * Dead Or Alive 2
+ * Soul Calibur (A few graphical glitches, kinda slow)
+ * Shenmue (A few graphical glitches, kinda slow, some audio skip)
  * Crazy Taxi 
  * Sonic Adventures 2
  * Rayman 2: The Great Escape
+ * Star Wars - Episode I - Racer
 
 Games I have tested on N64 with similar result:
 
@@ -140,9 +147,36 @@ Games I have tested on N64 with similar result:
  * Perfect Dark
  * Golden Eye
 
-PS1: TODO. 
+PS1 games I have tested: 
 
-I imagine it works great given it already works pretty well on Raspberry Pi 3, and Tinker has around twice the horsepower.
+ * Gran Turismo 2
+ * Twisted Metal 4
+ * Spyro The Dragon 1
+ * Spyro The Dragon 2
+ * Spyro The Dragon 3 (Slightly glitchy intro / cutscenes)
+ * Tony Hawks Pro Skater 1 
+ * Tony Hawks Pro Skater 2
+ * Tony Hawks Pro Skater 3 (Little slow)
+ * Tony Hawks Pro Skater 4
+ * Tom Clancys Rainbow Six
+ * Medal Of Honor
+ * Crash Bandicoot 1
+ * Crash Bandicoot 2
+ * Crash Bandicoot 3
+ * Crash Team Racing
+ * Crash Bash
+ * Tomb Raider 1
+ * Tomb Raider 2
+ * Tomb Raider 3 (Little slow)
+ * Tomb Raider 4
+ * Tomb Raider 5
+
+PSP games (Mostly bootup tested, maybe slow but playable):
+
+ * Burnout Legends (Pretty good, minor audio skipping)
+ * Mega Man - Powered Up (Pretty good, minor audio skipping)
+ * Grand Theft Auto - Vice City Stories (Good, very minor audio skip)
+ * Final Fantasy III (Good, occasional audio crackle)
 
 
 # Starting emulationstation
