@@ -149,6 +149,7 @@ Games I have tested on reicast running pretty much full or playable speed:
  * Sonic Adventures 2
  * Rayman 2: The Great Escape
  * Star Wars - Episode I - Racer
+ * GTA 2
 
 Games I have tested on N64 with similar result:
 
