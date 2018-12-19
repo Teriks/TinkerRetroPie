@@ -241,6 +241,11 @@ You will need to do some research on configuring controllers with RetroPie, it i
 
 See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
 
+
+When [https://github.com/Teriks/TinkerRetroPie/blob/master/tools/installer.cfg](installer.cfg) is present in the installer
+directory, it will be used to define all install options. This will be the case when you use the [https://github.com/Teriks/TinkerRetroPie/blob/master/tools/build_release.sh](build_release.sh) or [https://github.com/Teriks/TinkerRetroPie/blob/master/tools/build_dev_release.sh](build_dev_release.sh) scripts to build the Armbian image / RetroPie installer combo.
+
+
 ```bash
 
 # Automatically do a RetroPie basic install with some extra modules
@@ -248,20 +253,20 @@ See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
 
 
 ./TinkerRetroPieInstaller/install.sh RETROPIE_BASIC_INSTALL=1 \
-                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
+                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker ppsspp-tinker"
 
 # You can also select a branch + commit
 
 ./TinkerRetroPieInstaller/install.sh RETROPIE_BRANCH=master \
-                                     RETROPIE_COMMIT=31ffdb0 \
+                                     RETROPIE_COMMIT=e719833 \
                                      RETROPIE_BASIC_INSTALL=1 \
-                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
+                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker ppsspp-tinker"
 
 # Or a tag (via git --branch)
 
 ./TinkerRetroPieInstaller/install.sh RETROPIE_BRANCH=4.4 \
                                      RETROPIE_BASIC_INSTALL=1 \
-                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker"
+                                     RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker ppsspp-tinker"
 
 ```
 
@@ -290,10 +295,10 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 # 1) Clone/update the Armbian/build repo at (scriptpath)/armbian_build
 # 2) Skip the kernel configuration menu
-# 3) Build with linux kernel at tag v4.14.71
-# 4) Checkout Armbian/build repo at commit c1530db (Armbian 5.60)
+# 3) Build with linux kernel at tag v4.14.81
+# 4) Checkout Armbian/build repo at commit c1530db (Armbian 5.67)
 
-./build_installer.sh BUILD_ARMBIAN=yes KERNEL_CONFIGURE=no KERNELBRANCH=tag:v4.14.71 LIB_TAG=c1530db
+./build_installer.sh BUILD_ARMBIAN=yes KERNEL_CONFIGURE=no KERNELBRANCH=tag:v4.14.81 LIB_TAG=a37a9cf
 
 # Example 2, This Will:
 
@@ -331,7 +336,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 # 1.) Clone/update the Armbian/build repo at (scriptpath)/armbian_build
 # 2.) Skip the kernel configuration menu
 # 3.) Build the kernel from the latest tag in the linux-4.14.y branch
-# 4.) Checkout Armbian/build repo at commit: c1530db (5.60)
+# 4.) Checkout Armbian/build repo at commit: a37a9cf (5.67)
 # 5.) Use the TinkerRetroPie installer config file at 'tools/cur_installer.cfg'
 #
 # 6.) Place the output image and installer tarball in ./my_custom_output_dir
@@ -340,7 +345,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 ./build_installer.sh BUILD_ARMBIAN=yes \
                      KERNEL_CONFIGURE=yes \
                      KERNELBRANCH=branch:linux-4.14.y \
-                     LIB_TAG=c1530db \
+                     LIB_TAG=a37a9cf \
                      TINKER_RETROPIE_CONFIG="tools/cur_installer.cfg" \
                      OUTPUT_DIR=./my_custom_output_dir
 
@@ -356,7 +361,7 @@ e.g:
 
 # Build from a tag
 
-./build_installer.sh BOOTBRANCH="tag:v2018.11-rc1"
+./build_installer.sh BOOTBRANCH="tag:v2019.01-rc2"
 
 # Use latest
 
