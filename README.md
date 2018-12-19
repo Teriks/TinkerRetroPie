@@ -34,6 +34,7 @@ Password: 1234
 Release images **without** RetroPie installed can be logged into with:
 
 ```bash
+# you will be asked to setup your own user when you boot one of the bare images.
 
 User: root
 Password: 1234
