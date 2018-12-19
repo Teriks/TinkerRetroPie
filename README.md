@@ -242,8 +242,8 @@ You will need to do some research on configuring controllers with RetroPie, it i
 See `TinkerRetroPieInstaller/install.sh --help` for installer parameters.
 
 
-When [https://github.com/Teriks/TinkerRetroPie/blob/master/tools/installer.cfg](installer.cfg) is present in the installer
-directory, it will be used to define all install options. This will be the case when you use the [https://github.com/Teriks/TinkerRetroPie/blob/master/tools/build_release.sh](build_release.sh) or [https://github.com/Teriks/TinkerRetroPie/blob/master/tools/build_dev_release.sh](build_dev_release.sh) scripts to build the Armbian image / RetroPie installer combo.
+When [installer.cfg](https://github.com/Teriks/TinkerRetroPie/blob/master/tools/installer.cfg) is present in the installer
+directory, it will be used to define all install options. This will be the case when you use the [build_release.sh](https://github.com/Teriks/TinkerRetroPie/blob/master/tools/build_release.sh) or [build_dev_release.sh](https://github.com/Teriks/TinkerRetroPie/blob/master/tools/build_dev_release.sh) scripts to build the Armbian image / RetroPie installer combo.
 
 
 ```bash
