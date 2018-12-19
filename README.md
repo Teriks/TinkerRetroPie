@@ -158,7 +158,7 @@ PS1 games I have tested:
  * Tony Hawks Pro Skater 2
  * Tony Hawks Pro Skater 3 (Little slow)
  * Tony Hawks Pro Skater 4
- * Tom Clancys Rainbow Six
+ * Tom Clancy's Rainbow Six
  * Medal Of Honor
  * Crash Bandicoot 1
  * Crash Bandicoot 2
