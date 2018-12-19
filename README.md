@@ -31,6 +31,16 @@ Password: 1234
 
 ```
 
+Release images **without** RetroPie installed can be logged into with:
+
+```bash
+
+User: root
+Password: 1234
+
+
+```
+
 **TinkerRetroPieInstaller.tar.gz** is the installer tarball that can be used to install RetroPie on the bare image if you want to do it yourself.
 
 ```bash
