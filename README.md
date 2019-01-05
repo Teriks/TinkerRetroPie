@@ -231,6 +231,8 @@ You can force Armbian to boot to a specific resolution by editing `/boot/armbian
 In order to force a 720-24p resolution that might work better on older TV's for example, you can add this line
 to the end of your `/boot/armbianEnv.txt` file.
 
+( *Edit with nano: `sudo nano /boot/armbianEnv.txt` password: 1234* )
+
 ```
 extraargs=video=drm_kms_helper.edid_firmware=HDMI-A-1:edid/1280x720.bin video=HDMI-A-1:1280x720-24@60
 ```
