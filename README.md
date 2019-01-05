@@ -62,8 +62,9 @@ For starting emulationstation, see section: [Starting emulationstation](#startin
   * [Performance](#performance)
     * [Tested games](#tested-games)
   * [Starting emulationstation](#starting-emulationstation)
-  * [Adjusting display resolution (Fix invalid signal problems)](#adjusting-display-resolution)
   * [Update RetroPie / Install more software](#update-retropie--install-more-software)
+  * [Trouble Shooting](#trouble-shooting)
+    * [Adjusting display resolution (Fix invalid signal problems)](#adjusting-display-resolution)
   * [Build from source / Install yourself](#build-from-source--install-yourself)
     * [Build the latest everything](#build-the-latest-everything)
     * [Install xpad / xboxdrv](#install-xpad--xboxdrv)
@@ -207,7 +208,17 @@ emulationstation
 
 If you want to have **emulationstation** start on boot, refer to: [RetroPie-Setup Wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/FAQ#how-do-i-boot-to-the-desktop-or-kodi)
 
-# Adjusting display resolution
+# Update RetroPie / Install more software
+
+
+You can CD into `~/RetroPie-Setup` and run: `git pull origin master` to fetch the latest setup script changes.
+
+Then run: `sudo ./retropie_setup.sh` to start the setup script, which will allow you to update
+or install additional RetroPie packages by building them from source.
+
+# Trouble Shooting
+
+## Adjusting display resolution
 
 The default output resolution used by Armbian with kernel modesetting enabled is 1080p (1920x1080)
 
@@ -245,14 +256,6 @@ To return to using the default resolution just remove the line you added and reb
 ```
 extraargs=video=drm_kms_helper.edid_firmware=HDMI-A-1:edid/1920x1080.bin video=HDMI-A-1:1920x1080@60
 ```
-
-# Update RetroPie / Install more software
-
-
-You can CD into `~/RetroPie-Setup` and run: `git pull origin master` to fetch the latest setup script changes.
-
-Then run: `sudo ./retropie_setup.sh` to start the setup script, which will allow you to update
-or install additional RetroPie packages by building them from source.
 
 
 # Build from source / Install yourself
