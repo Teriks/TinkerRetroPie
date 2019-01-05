@@ -62,6 +62,7 @@ For starting emulationstation, see section: [Starting emulationstation](#startin
   * [Performance](#performance)
     * [Tested games](#tested-games)
   * [Starting emulationstation](#starting-emulationstation)
+  * [Adjusting display resolution (Fix invalid signal problems)](#adjusting-display-resolution)
   * [Update RetroPie / Install more software](#update-retropie--install-more-software)
   * [Build from source / Install yourself](#build-from-source--install-yourself)
     * [Build the latest everything](#build-the-latest-everything)
@@ -205,6 +206,45 @@ emulationstation
 ```
 
 If you want to have **emulationstation** start on boot, refer to: [RetroPie-Setup Wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/FAQ#how-do-i-boot-to-the-desktop-or-kodi)
+
+# Adjusting display resolution
+
+The default output resolution used by Armbian with kernel modesetting enabled is 1080p (1920x1080)
+
+Some older TV's and possibly old monitors may not be happy with this when starting up an emulator, and they might
+lose signal or display something along the lines of "invalid signal" because they cannot handle the requested 
+resolution.
+
+You can force Armbian to boot to a specific resolution by editing `/boot/armbianEnv.txt`
+
+In order to force a 720-24p resolution that might work better on older TV's for example, you can add this line
+to the end of your `/boot/armbianEnv.txt` file.
+
+```
+extraargs=video=drm_kms_helper.edid_firmware=HDMI-A-1:edid/1280x720.bin video=HDMI-A-1:1280x720-24@60
+```
+
+After you have added this, reboot your board.  
+
+```
+sudo shutdown -r now
+```
+
+You should boot into a noticably lower resolution console if you have edited the file correctly. If you fail to get any video output once you have changed this, you can edit the file directly on the SDCard using an SDCard reader or over SSH to fix any mistakes / revert the file.
+
+You can try various resolutions to get a better picture, for example:
+
+```
+extraargs=video=drm_kms_helper.edid_firmware=HDMI-A-1:edid/1280x1024.bin video=HDMI-A-1:1280x1024@60
+```
+
+The above will probably work as well if 1280x720 works on your TV, but the picture may be slightly skewed horizontally.
+
+To return to using the default resolution just remove the line you added and reboot your board, or set it explicitly like this:
+
+```
+extraargs=video=drm_kms_helper.edid_firmware=HDMI-A-1:edid/1920x1080.bin video=HDMI-A-1:1920x1080@60
+```
 
 # Update RetroPie / Install more software
 
