@@ -63,7 +63,7 @@ For starting emulationstation, see section: [Starting emulationstation](#startin
     * [Tested games](#tested-games)
   * [Starting emulationstation](#starting-emulationstation)
   * [Update RetroPie / Install more software](#update-retropie--install-more-software)
-  * [Trouble Shooting](#trouble-shooting)
+  * [Troubleshooting](#troubleshooting)
     * [Adjusting display resolution (Fix invalid signal problems)](#adjusting-display-resolution)
   * [Build from source / Install yourself](#build-from-source--install-yourself)
     * [Build the latest everything](#build-the-latest-everything)
@@ -216,7 +216,7 @@ You can CD into `~/RetroPie-Setup` and run: `git pull origin master` to fetch th
 Then run: `sudo ./retropie_setup.sh` to start the setup script, which will allow you to update
 or install additional RetroPie packages by building them from source.
 
-# Trouble Shooting
+# Troubleshooting
 
 ## Adjusting display resolution
 
