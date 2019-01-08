@@ -395,14 +395,14 @@ main() {
     set -x
 
     pushd "$INSTALLER_DIR"
-    rm -f packages/linux-headers-next-rockchip_*_armhf.deb
+    rm -f packages/linux-headers-*-rockchip_*_armhf.deb
     rm -f packages/armbian-config_*_all.deb
     rm -f packages/armbian-firmware-full_*_all.deb
     rm -f packages/armbian-tools-stretch_*_armhf.deb
     popd
 
     pushd "$ARMBIAN_OUTPUT_DEBS_DIR"
-    cp linux-headers-next-rockchip_*_armhf.deb "$INSTALLER_DIR/packages"
+    cp linux-headers-*-rockchip_*_armhf.deb "$INSTALLER_DIR/packages"
     cp armbian-config_*_all.deb "$INSTALLER_DIR/packages"
     cp armbian-firmware-full_*_all.deb "$INSTALLER_DIR/packages"
     cp armbian-tools-stretch_*_armhf.deb "$INSTALLER_DIR/packages"
