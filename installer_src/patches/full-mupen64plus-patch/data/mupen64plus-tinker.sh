@@ -9,7 +9,7 @@
 # at https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/LICENSE.md
 #
 
-rp_module_id="mupen64plus"
+rp_module_id="mupen64plus-tinker"
 rp_module_desc="N64 emulator MUPEN64Plus"
 rp_module_help="ROM Extensions: .z64 .n64 .v64\n\nCopy your N64 roms to $romdir/n64"
 rp_module_licence="GPL2 https://raw.githubusercontent.com/mupen64plus/mupen64plus-core/master/LICENSES"
@@ -18,12 +18,12 @@ rp_module_flags="tinker"
 
 
 
-function depends_mupen64plus() {
+function depends_mupen64plus-tinker() {
     local depends=(cmake libsamplerate0-dev libspeexdsp-dev libsdl2-dev libpng12-dev fonts-freefont-ttf libboost-all-dev)
     getDepends "${depends[@]}"
 }
 
-function sources_mupen64plus() {
+function sources_mupen64plus-tinker() {
 
     local repos=(
         "mupen64plus core MUPEN64PLUS_CORE_BRANCH MUPEN64PLUS_CORE_COMMIT"
@@ -48,13 +48,13 @@ function sources_mupen64plus() {
                                         "GONETZ_GLIDEN64_COMMIT"
 
     # workaround for shader cache crash issue on Raspbian stretch. See: https://github.com/gonetz/GLideN64/issues/1665
-    applyPatch "$md_data/0001-GLideN64-use-emplace.patch"
+    # applyPatch "$md_data/0001-GLideN64-use-emplace.patch"
 
     local config_version=$(grep -oP '(?<=CONFIG_VERSION_CURRENT ).+?(?=U)' GLideN64/src/Config.h)
     echo "$config_version" > "$md_build/GLideN64_config_version.ini"
 }
 
-function build_mupen64plus() {
+function build_mupen64plus-tinker() {
     rpSwap on 750
 
     local dir
@@ -92,7 +92,7 @@ function build_mupen64plus() {
     )
 }
 
-function install_mupen64plus() {
+function install_mupen64plus-tinker() {
     for source in *; do
         if [[ -f "$source/projects/unix/Makefile" ]]; then
             # optflags is needed due to the fact the core seems to rebuild 2 files and relink during install stage most likely due to a buggy makefile
@@ -107,7 +107,7 @@ function install_mupen64plus() {
     rm -f "$md_inst/share/mupen64plus/InputAutoCfg.ini"
 }
 
-function configure_mupen64plus() {
+function configure_mupen64plus-tinker() {
     addEmulator 0 "${md_id}-gles2n64" "n64" "$md_inst/bin/mupen64plus.sh mupen64plus-video-n64 %ROM%"
     addEmulator 0 "${md_id}-GLideN64" "n64" "$md_inst/bin/mupen64plus.sh mupen64plus-video-GLideN64 %ROM%"
     addEmulator 0 "${md_id}-glide64" "n64" "$md_inst/bin/mupen64plus.sh mupen64plus-video-glide64mk2 %ROM%"
@@ -120,10 +120,12 @@ function configure_mupen64plus() {
 
     [[ "$md_mode" == "remove" ]] && return
 
-    # copy hotkey remapping start script
-    cp "$md_data/mupen64plus.sh" "$md_inst/bin/"
+    local OG_DATA="$(dirname $md_data)/mupen64plus"
 
-    patch "$md_inst/bin/mupen64plus.sh" "$md_data/tinker/start-mupen64plus-tinker.patch" || exit 1
+    # copy hotkey remapping start script
+    cp "$OG_DATA/mupen64plus.sh" "$md_inst/bin/"
+
+    patch "$md_inst/bin/mupen64plus.sh" "$OG_DATA/tinker/start-mupen64plus-tinker.patch" || exit 1
 
     chmod +x "$md_inst/bin/mupen64plus.sh"
 

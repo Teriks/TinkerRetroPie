@@ -1,95 +1,117 @@
-331d330
-<     RES="--resolution 320x240"
-334,354d332
-<     # these games run fine and look better with 640x480
-<     local highres=(
-<         yoshi
-<         worms
-<         party
-<         pokemon
-<         bomberman
-<         harvest
-<         diddy
-<         1080
-<         starcraft
-<         wipeout
-<         dark
-<     )
-< 
-<     for game in "${highres[@]}"; do
-<         if [[ "${ROM,,}" == *"$game"* ]]; then
-<             RES="--resolution 640x480"
-<             break
-<         fi
-<     done
-385a364,417
-> function autoIniResolution(){
->     local res=($(fbset | sed --silent '2s|.*"\([[:digit:]]\+\)x\([[:digit:]]\+\).*|\1 \2|p'))
->     local res_x=${res[0]}
->     local res_y=${res[1]}
-> 
->     if [ "$VIDEO_PLUGIN" = "mupen64plus-video-n64" ]; then
-> 
->         local gles2n64conf="$configdir/n64/gles2n64.conf"
->         local gles2n64conf_default="$rootdir/emulators/mupen64plus/share/mupen64plus/gles2n64.conf"
-> 
->         iniConfig "=" "" "$gles2n64conf"
-> 
->         if [ -e "$gles2n64conf" ]; then
-> 
->             if ! grep -q "config version" "$gles2n64conf"; then
->                # empty config?
-> 
->                cp "$gles2n64conf_default" "$gles2n64conf"
->             fi
-> 
->         else
->             cp "$gles2n64conf_default" "$gles2n64conf"
->         fi
-> 
->         iniSet "window width" $res_x
->         iniSet "window height" $res_y
-> 
->     else
-> 
->         iniConfig " = " "" "$config"
-> 
->         if ! grep -q "\[Video-General\]" "$config"; then
->             # Missing Section
-> 
->             echo "[Video-General]" >> "$config"
->             echo "ScreenWidth=$res_x" >> "$config"
->             echo "ScreenHeight=$res_y" >> "$config"
->         else
->             if ! grep -q "ScreenWidth" "$config"; then
->                 # First start
-> 
->                 local v_line=$(grep -nr '\[Video-General\]' "$config" | cut -d : -f1)
-> 
->                 # Insert under Video-General
->                 sed -i "$(($v_line+1))i ScreenWidth=$res_x\nScreenHeight=$res_y" "$config"
->             else
-> 
->                 iniSet "ScreenWidth" $res_x
->                 iniSet "ScreenHeight" $res_y
->             fi
->         fi
->     fi
-> }
-> 
-431a464,465
-> 
-> 
-437a472
-> getAutoConf mupen64plus_auto_ini_resolution && autoIniResolution
-439,446c474
-< if [[ "$(sed -n '/^Hardware/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo)" == BCM* ]]; then
-<     # If a raspberry pi is used lower resolution to 320x240 and enable SDL dispmanx scaling mode 1
-<     SDL_VIDEO_RPI_SCALE_MODE=1 "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --windowed $RES --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio ${AUDIO_PLUGIN}.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"
-< elif [[ -e /opt/vero3/lib/libMali.so  ]]; then
-<     SDL_AUDIODRIVER=alsa "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --fullscreen --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio mupen64plus-audio-sdl.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"
-< else
-<     SDL_AUDIODRIVER=pulse "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --fullscreen --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio mupen64plus-audio-sdl.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"
-< fi
----
-> "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --fullscreen $RES --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio ${AUDIO_PLUGIN}.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"
+--- mupen64plus-old.sh	2019-06-06 21:48:19.656404509 -0500
++++ mupen64plus-new.sh	2019-06-06 21:45:38.890670269 -0500
+@@ -330,30 +330,8 @@
+ 
+ function autoset() {
+     VIDEO_PLUGIN="mupen64plus-video-GLideN64"
+-    RES="--resolution 320x240"
+ 
+     local game
+-    # these games run fine and look better with 640x480
+-    local highres=(
+-        yoshi
+-        worms
+-        party
+-        pokemon
+-        bomberman
+-        harvest
+-        diddy
+-        1080
+-        starcraft
+-        wipeout
+-        dark
+-    )
+-
+-    for game in "${highres[@]}"; do
+-        if [[ "${ROM,,}" == *"$game"* ]]; then
+-            RES="--resolution 640x480"
+-            break
+-        fi
+-    done
+ 
+     # these games have no glitches and run faster with gles2n64
+     local gles2n64=(
+@@ -385,6 +363,60 @@
+     done
+ }
+ 
++function autoIniResolution(){
++    local res=($(fbset | sed --silent '2s|.*"\([[:digit:]]\+\)x\([[:digit:]]\+\).*|\1 \2|p'))
++    local res_x=${res[0]}
++    local res_y=${res[1]}
++
++    if [ "$VIDEO_PLUGIN" = "mupen64plus-video-n64" ]; then
++
++        local gles2n64conf="$configdir/n64/gles2n64.conf"
++        local gles2n64conf_default="$rootdir/emulators/mupen64plus-tinker/share/mupen64plus/gles2n64.conf"
++
++        iniConfig "=" "" "$gles2n64conf"
++
++        if [ -e "$gles2n64conf" ]; then
++
++            if ! grep -q "config version" "$gles2n64conf"; then
++               # empty config?
++
++               cp "$gles2n64conf_default" "$gles2n64conf"
++            fi
++
++        else
++            cp "$gles2n64conf_default" "$gles2n64conf"
++        fi
++
++        iniSet "window width" $res_x
++        iniSet "window height" $res_y
++
++    else
++
++        iniConfig " = " "" "$config"
++
++        if ! grep -q "\[Video-General\]" "$config"; then
++            # Missing Section
++
++            echo "[Video-General]" >> "$config"
++            echo "ScreenWidth=$res_x" >> "$config"
++            echo "ScreenHeight=$res_y" >> "$config"
++        else
++            if ! grep -q "ScreenWidth" "$config"; then
++                # First start
++
++                local v_line=$(grep -nr '\[Video-General\]' "$config" | cut -d : -f1)
++
++                # Insert under Video-General
++                sed -i "$(($v_line+1))i ScreenWidth=$res_x\nScreenHeight=$res_y" "$config"
++            else
++
++                iniSet "ScreenWidth" $res_x
++                iniSet "ScreenHeight" $res_y
++            fi
++        fi
++    fi
++}
++
+ if ! grep -q "\[Core\]" "$config"; then
+     echo "[Core]" >> "$config"
+     echo "Version = 1.010000" >> "$config"
+@@ -431,18 +463,14 @@
+ _EOF_
+ fi
+ 
++
++
+ getAutoConf mupen64plus_savepath && setPath
+ getAutoConf mupen64plus_hotkeys && remap
+ getAutoConf mupen64plus_audio && setAudio
+ [[ "$VIDEO_PLUGIN" == "AUTO" ]] && autoset
+ getAutoConf mupen64plus_compatibility_check && testCompatibility
+ getAutoConf mupen64plus_texture_packs && useTexturePacks
++getAutoConf mupen64plus_auto_ini_resolution && autoIniResolution
+ 
+-if [[ "$(sed -n '/^Hardware/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo)" == BCM* ]]; then
+-    # If a raspberry pi is used lower resolution to 320x240 and enable SDL dispmanx scaling mode 1
+-    SDL_VIDEO_RPI_SCALE_MODE=1 "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --windowed $RES --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio ${AUDIO_PLUGIN}.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"
+-elif [[ -e /opt/vero3/lib/libMali.so  ]]; then
+-    SDL_AUDIODRIVER=alsa "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --fullscreen --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio mupen64plus-audio-sdl.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"
+-else
+-    SDL_AUDIODRIVER=pulse "$rootdir/emulators/mupen64plus/bin/mupen64plus" --noosd --fullscreen --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio mupen64plus-audio-sdl.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"
+-fi
++"$rootdir/emulators/mupen64plus-tinker/bin/mupen64plus" --noosd --fullscreen $RES --rsp ${RSP_PLUGIN}.so --gfx ${VIDEO_PLUGIN}.so --audio ${AUDIO_PLUGIN}.so --configdir "$configdir/n64" --datadir "$configdir/n64" "$ROM"

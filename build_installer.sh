@@ -181,21 +181,15 @@ compile_armbian() {
 
     if [ -z "$BRANCH" ]; then
 
-
-
-        if [ "$kernel_major" -eq 4 ]; then
-            if [ "$kernel_minor" -gt 14 ]; then
-                BRANCH=dev
-            elif [ "$kernel_minor" -gt 4 ]; then
+	if [ "$kernel_major" -eq 5 ]; then
+            BRANCH=dev
+	else
+            if [ "$kernel_minor" -gt 4 ]; then
                 BRANCH=next
             else
                 BRANCH=default
             fi
-        else
-            echo "===================="
-            echo "Build Failed: Unable to build a non major version 4 kernel!"
-            exit 1
-        fi
+	fi
         
         echo "===================="
         echo "Kernel Version - Maj: $kernel_major, Min: $kernel_minor"
