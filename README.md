@@ -14,9 +14,9 @@ A bare image, an image with RetroPie preinstalled, and the current installer tar
 
 **Note:** Make sure to unzip the provided image files before flashing them.
 
-**Armbian_5.X_Tinkerboard_Debian_stretch_next_4.14.X.img.zip** contains the bare customized Armbian OS image with no RetroPie installed.
+**Armbian_5.X_Tinkerboard_Debian_stretch_next_4.19.X.img.zip** contains the bare customized Armbian OS image with no RetroPie installed.
 
-**Armbian_5.X_Tinkerboard_Debian_stretch_next_4.14.X_TinkerRetroPie_vX.Y.Z.img.zip** contains the customized Armbian OS image with RetroPie already installed for you.
+**Armbian_5.X_Tinkerboard_Debian_stretch_next_4.19.X_TinkerRetroPie_vX.Y.Z.img.zip** contains the customized Armbian OS image with RetroPie already installed for you.
 
 Release images with RetroPie installed will have the following credentials:
 
@@ -96,7 +96,7 @@ You can also use an Armbian build that you have previously built by specifying i
 But the build must have had Mali Midgard devfreq support enabled from kernel config menu.  It is recommended
 to also manually modularize 'joypad' and 'evdev' from the kernel config menu, and remove 'xpad' completely.
 
-TinkerRetroPie requires the "next" branch of the kernel (4.14.*), and is only tested on images based on Debian Stretch.
+TinkerRetroPie requires the "next" branch of the kernel (4.19.*), and is only tested on images based on Debian Stretch.
 
 Install is only supported on the minimal server distribution. 
 Adding a desktop environment is untested/unsupported due to the finickiness of the userland Mali GPU drivers and X11.
@@ -353,7 +353,7 @@ directory, it will be used to define all install options. This will be the case 
 # You can also select a branch + commit
 
 ./TinkerRetroPieInstaller/install.sh RETROPIE_BRANCH=master \
-                                     RETROPIE_COMMIT=e719833 \
+                                     RETROPIE_COMMIT=f6158ea \
                                      RETROPIE_BASIC_INSTALL=1 \
                                      RETROPIE_INSTALL_MODULES="xpad reicast-latest-tinker ppsspp-tinker"
 
@@ -390,22 +390,22 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 # 1) Clone/update the Armbian/build repo at (scriptpath)/armbian_build
 # 2) Skip the kernel configuration menu
-# 3) Build with linux kernel at tag v4.14.81
-# 4) Checkout Armbian/build repo at commit c1530db (Armbian 5.67)
+# 3) Build with linux kernel at tag v4.19.47
+# 4) Checkout Armbian/build repo at commit f703006 (Armbian 5.88)
 
-./build_installer.sh BUILD_ARMBIAN=yes KERNEL_CONFIGURE=no KERNELBRANCH=tag:v4.14.81 LIB_TAG=a37a9cf
+./build_installer.sh BUILD_ARMBIAN=yes KERNEL_CONFIGURE=no KERNELBRANCH=tag:v4.19.47 LIB_TAG=f703006
 
 # Example 2, This Will:
 
 # 1) Clone/update the Armbian/build repo to/at ARMBIAN_BUILD_PATH (./my_custom_build)
 # 2) Give access to the kernel configuration menu
-# 3) Build the kernel from the latest tag in the linux-4.14.y branch
+# 3) Build the kernel from the latest tag in the linux-4.19.y branch
 # 4) Checkout Armbian/build repo at the latest commit (master)
 
 ./build_installer.sh ARMBIAN_BUILD_PATH=./my_custom_build \
                      BUILD_ARMBIAN=yes \
                      KERNEL_CONFIGURE=yes \
-                     KERNELBRANCH=branch:linux-4.14.y \
+                     KERNELBRANCH=branch:linux-4.19.y \
                      LIB_TAG=master
 
 
@@ -413,7 +413,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 # 1.) Clone/update the Armbian/build repo at (scriptpath)/armbian_build
 # 2.) Skip the kernel configuration menu
-# 3.) Build the kernel from the latest tag in the linux-4.14.y branch
+# 3.) Build the kernel from the latest tag in the linux-4.19.y branch
 # 4.) Checkout Armbian/build repo at the latest commit (master)
 #
 # 5.) Place the output image and installer tarball in ./my_custom_output_dir
@@ -421,7 +421,7 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 ./build_installer.sh BUILD_ARMBIAN=yes \
                      KERNEL_CONFIGURE=yes \
-                     KERNELBRANCH=branch:linux-4.14.y \
+                     KERNELBRANCH=branch:linux-4.19.y \
                      LIB_TAG=master \
                      OUTPUT_DIR=./my_custom_output_dir
 
@@ -430,8 +430,8 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 # 1.) Clone/update the Armbian/build repo at (scriptpath)/armbian_build
 # 2.) Skip the kernel configuration menu
-# 3.) Build the kernel from the latest tag in the linux-4.14.y branch
-# 4.) Checkout Armbian/build repo at commit: a37a9cf (5.67)
+# 3.) Build the kernel from the latest tag in the linux-4.19.y branch
+# 4.) Checkout Armbian/build repo at commit: f703006 (5.88)
 # 5.) Use the TinkerRetroPie installer config file at 'tools/cur_installer.cfg'
 #
 # 6.) Place the output image and installer tarball in ./my_custom_output_dir
@@ -439,8 +439,8 @@ rebuild of Armbian OS, which would normally not happen unless no images are foun
 
 ./build_installer.sh BUILD_ARMBIAN=yes \
                      KERNEL_CONFIGURE=yes \
-                     KERNELBRANCH=branch:linux-4.14.y \
-                     LIB_TAG=a37a9cf \
+                     KERNELBRANCH=branch:linux-4.19.y \
+                     LIB_TAG=f703006 \
                      TINKER_RETROPIE_CONFIG="tools/cur_installer.cfg" \
                      OUTPUT_DIR=./my_custom_output_dir
 
